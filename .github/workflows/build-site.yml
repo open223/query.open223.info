@@ -1,0 +1,57 @@
+name: Build and Run NPM Package
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Remote Repository
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
+
+      - name: install deps
+        run: poetry install
+
+      - name: compile models
+        run: make compile-models
+
+      - name: make index.html
+        run: make index.html
+
+      - name: Commit Built Files
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "github-action@example.com"
+          git add compiled-models index.html
+          git diff --quiet --exit-code || git commit -m "Commit built files" && git push
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
