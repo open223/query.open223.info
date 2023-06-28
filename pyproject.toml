@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "223p-web-sparql"
+version = "0.1.0"
+description = ""
+authors = ["Gabe Fierro <gtfierro@mines.edu>"]
+license = "bsd-3-clause"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+ontoenv = "^0.3.4"
+rdflib = "^6.2.1"
+Jinja2 = "^3.1.1"
+pyshacl = "^0.22"
+toml = "^0.10.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
