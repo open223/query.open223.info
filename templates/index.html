@@ -40,6 +40,7 @@
             <h4>223P Queries</h4>
             <div id="query-examples">
                 <select class="example-models" @change="handleQuery($event)">
+                    <option value=''><a href="javascript: void(0);">Select a query</a></option>
                 {% for query_name, query_text in queries.items() %}
                     <option value='{{ query_text }}'><a href="javascript: void(0);">{{ query_name }}</a></option>
                 {% endfor %}
