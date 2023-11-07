@@ -17,9 +17,9 @@ name="Temperature Sensors"
 description="find sensors that measure temperature"
 query="""SELECT ?sensor ?location WHERE {
     ?sensor rdf:type/rdfs:subClassOf* s223:Sensor .
-    ?sensor s223:observesProperty ?property .
+    ?sensor s223:observes ?property .
     ?property qudt:hasQuantityKind quantitykind:Temperature .
-    ?sensor s223:hasMeasurementLocation ?location
+    ?sensor s223:hasObservationLocation ?location
 }"""
 
 [[query]]
@@ -27,8 +27,8 @@ name="What are all the temperature sensors?"
 query="""SELECT ?sensor
 WHERE {
 ?sensor a s223:TemperatureSensor .
-?sensor s223:hasMeasurementLocation ?location .
-?device s223:contains ?sensor .
+?sensor s223:hasObservationLocation ?observe_location .
+?sensor s223:hasPhysicalLocation ?physical_location .
 }"""
 
 [[query]]
