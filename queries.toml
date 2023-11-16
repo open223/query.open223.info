@@ -6,10 +6,10 @@ query="""SELECT ?ent ?type WHERE {
 }"""
 
 [[query]]
-name="All Systems"
-description="Query all systems"
+name="All Equipment"
+description="Find all equipment"
 query="""SELECT ?sys WHERE {
-    ?sys rdf:type/rdfs:subClassOf* s223:System .
+    ?sys rdf:type/rdfs:subClassOf* s223:Equipment .
 }"""
 
 [[query]]
@@ -24,10 +24,11 @@ query="""SELECT ?sensor ?location WHERE {
 
 [[query]]
 name="What are all the temperature sensors?"
-query="""SELECT ?sensor
+query="""SELECT ?sensor ?physical_location
 WHERE {
-?sensor a s223:TemperatureSensor .
-?sensor s223:hasObservationLocation ?observe_location .
+?sensor rdf:type/rdfs:subClassOf* s223:Sensor .
+?sensor s223:observes ?property .
+?property qudt:hasQuantityKind quantitykind:Temperature .
 ?sensor s223:hasPhysicalLocation ?physical_location .
 }"""
 
