@@ -2,12 +2,12 @@ import re
 import string
 import random
 import argparse
-import pyshacl
+import brickschema
 import ontoenv
 import rdflib
 
 env = ontoenv.OntoEnv()
-graph = rdflib.Graph()
+graph = brickschema.Graph()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -34,12 +34,8 @@ if __name__ == "__main__":
     graph.bind("qudtprefix", rdflib.Namespace("http://qudt.org/vocab/prefix/"))
 
     if args.reason:
-        valid, _, report = pyshacl.validate(
-            graph, advanced=True, js=True, allow_warnings=True
-        )
-        valid, _, report = pyshacl.validate(
-            graph, advanced=True, js=True, allow_warnings=True
-        )
+        graph.expand(profile="shacl", backend="topquadrant")
+        valid, _, report = graph.validate(engine="topquadrant")
         if not valid:
             print(report)
     if args.output:

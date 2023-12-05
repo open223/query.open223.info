@@ -9,9 +9,10 @@ gather-files:
 	./tools/gather-files.sh
 
 compiled-models/%.ttl: models/%.ttl tools/compile.py ontologies/*.ttl
+	poetry run ontoenv refresh
 	poetry run python tools/compile.py -r -i -o $@ $< ontologies/223p.ttl
 
-compile-models: compiled-models/pritoni-latest.ttl compiled-models/doe-medium-office-ahu-vav.ttl compiled-models/lbnl-example.ttl compiled-models/nrel-example.ttl
+compile-models: compiled-models/pritoni-latest.ttl compiled-models/doe-medium-office-ahu-vav.ttl compiled-models/lbnl-example.ttl compiled-models/nrel-example.ttl compiled-models/IBAL.ttl
 
 index.html: templates/index.html tools/compile-html.py queries.toml compile-models
 	poetry run python tools/compile-html.py
