@@ -1,11 +1,13 @@
 @prefix bldg: <urn:ex/> .
 @prefix s223: <http://data.ashrae.org/standard223#> .
-@prefix owl: <http://www.w3.org/2012/07/owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix qudt: <http://qudt.org/schema/qudt/> .
 @prefix qudtqk: <http://qudt.org/vocab/quantitykind/> .
 @prefix unit: <http://qudt.org/vocab/unit/> .
 
-bldg: a owl:Ontology .
+bldg: a owl:Ontology ;
+.
+
 s223:Role-Outside a s223:EnumerationKind-Role . 
 s223:EnumerationKind-Override a s223:EnumerationKind . 
 bldg:office-ahu a s223:AirHandlingUnit ;
