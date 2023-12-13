@@ -30,11 +30,12 @@
         <!-- TODO: autogenerate this -->
             <h4>223P Building Model Examples</h4>
             <div id="model-examples">
-                <ul class="example-models">
-                {% for model_name, model_file in models.items() %}
-                    <li><a href="javascript: void(0);" @click="handleURL('{{ model_file }}', true)">{{ model_name }}</a></li>
-                {% endfor %}
-                </ul>
+                <select class="example-models" @change="handleURL($event.target.value, true)">
+                    <option value=''><a href="javascript: void(0);">Select a model</a></option>
+                    {% for model_name, model_file in models.items() %}
+                        <option value='{{ model_file }}'><a href="javascript: void(0);">{{ model_name }}</a></option>
+                    {% endfor %}
+                </select>
             </div>
 
             <h4>223P Queries</h4>
