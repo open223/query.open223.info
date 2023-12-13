@@ -277,11 +277,7 @@ s223:DifferentialSensor a s223:Class,
     rdfs:label "Differential sensor" ;
     rdfs:comment "A sensor that measures the difference of a quantity between any two points in the system." ;
     rdfs:subClassOf s223:AbstractSensor ;
-    sh:property [ rdfs:comment "A Differential Sensor must be defined in terms of the QuantityKind that is being measured." ;
-            sh:class qudt:QuantityKind ;
-            sh:minCount 1 ;
-            sh:path ( s223:observes qudt:hasQuantityKind ) ],
-        [ rdfs:comment "A Differential Sensor must have different values for hasObservationLocationHigh and hasObservationLocationLow." ;
+    sh:property [ rdfs:comment "A Differential Sensor must have different values for hasObservationLocationHigh and hasObservationLocationLow." ;
             sh:path s223:hasObservationLocationHigh ;
             sh:sparql [ a sh:SPARQLConstraint ;
                     rdfs:comment "Ensure that the values of hasObservationLocationHigh and hasObservationLocationLow are distinct." ;
@@ -294,7 +290,11 @@ WHERE {
     $this s223:hasObservationLocationLow ?low .
 FILTER (?high = ?low) .
 }
-""" ] ] ;
+""" ] ],
+        [ rdfs:comment "A Differential Sensor must be defined in terms of the QuantityKind that is being measured." ;
+            sh:class qudt:QuantityKind ;
+            sh:minCount 1 ;
+            sh:path ( s223:observes qudt:hasQuantityKind ) ] ;
     sh:xone ( [ sh:property [ rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, or ConnectionPoint using the relation hasObservationLocationHigh." ;
                         sh:class s223:Connectable ;
                         sh:maxCount 1 ;
@@ -993,6 +993,16 @@ s223:TemperatureSensor a s223:Class,
             sh:qualifiedValueShape [ sh:class s223:Property ;
                     sh:node [ sh:property [ sh:hasValue qudtqk:Temperature ;
                                     sh:path qudt:hasQuantityKind ] ] ] ] .
+
+s223:ThermalEnergyStorageUnit a s223:Class,
+        sh:NodeShape ;
+    rdfs:label "A Thermal Energy Storage System" ;
+    rdfs:comment "A device that stores thermal energy." ;
+    rdfs:subClassOf s223:Equipment ;
+    sh:property [ rdfs:comment "A Thermal Energy Storage Unit must have at least two connection points." ;
+            sh:class s223:ConnectionPoint ;
+            sh:minCount 2 ;
+            sh:path s223:hasConnectionPoint ] .
 
 s223:Thermostat a s223:Class,
         sh:NodeShape ;
@@ -8151,13 +8161,7 @@ s223:HeatExchanger a s223:Class,
     rdfs:label "Heat exchanger" ;
     rdfs:comment "A component intended to transfer heat from one medium to another while keeping the two media separate" ;
     rdfs:subClassOf s223:Equipment ;
-    sh:property [ rdfs:comment "A heat exchanger shall have at least 4 connection points." ;
-            sh:minCount 4 ;
-            sh:path s223:hasConnectionPoint ],
-        [ rdfs:comment "If the relation hasRole is present it must associate the HeatExchanger with a EnumerationKind-Role." ;
-            sh:class s223:EnumerationKind-Role ;
-            sh:path s223:hasRole ],
-        [ rdfs:comment "Heat Exchangers should have the same number of non-electrical inlet and outlet connection points." ;
+    sh:property [ rdfs:comment "Heat Exchangers should have the same number of non-electrical inlet and outlet connection points." ;
             sh:path s223:hasConnectionPoint ;
             sh:severity sh:Warning ;
             sh:sparql [ a sh:SPARQLConstraint ;
@@ -8193,7 +8197,13 @@ GROUP BY $this
 }
 FILTER (?incount != ?outcount)
 }
-""" ] ] .
+""" ] ],
+        [ rdfs:comment "A heat exchanger shall have at least 4 connection points." ;
+            sh:minCount 4 ;
+            sh:path s223:hasConnectionPoint ],
+        [ rdfs:comment "If the relation hasRole is present it must associate the HeatExchanger with a EnumerationKind-Role." ;
+            sh:class s223:EnumerationKind-Role ;
+            sh:path s223:hasRole ] .
 
 s223:LightSensor a s223:Class,
         sh:NodeShape ;
@@ -9426,17 +9436,7 @@ s223:Filter a s223:Class,
     rdfs:label "Filter" ;
     rdfs:comment "A device that removes contaminants from gases or liquids." ;
     rdfs:subClassOf s223:Equipment ;
-    sh:property [ rdfs:comment "A Filter shall have at least one inlet." ;
-            sh:minCount 1 ;
-            sh:path s223:hasConnectionPoint ;
-            sh:qualifiedMinCount 1 ;
-            sh:qualifiedValueShape [ sh:class s223:InletConnectionPoint ] ],
-        [ rdfs:comment "A Filter shall have at least one outlet." ;
-            sh:minCount 1 ;
-            sh:path s223:hasConnectionPoint ;
-            sh:qualifiedMinCount 1 ;
-            sh:qualifiedValueShape [ sh:class s223:OutletConnectionPoint ] ],
-        [ rdfs:comment "A filter should have one common constituent between the inlet and outlet" ;
+    sh:property [ rdfs:comment "A filter should have one common constituent between the inlet and outlet" ;
             sh:path s223:hasConnectionPoint ;
             sh:severity sh:Warning ;
             sh:sparql [ a sh:SPARQLConstraint ;
@@ -9462,7 +9462,17 @@ FILTER (NOT EXISTS {
     } 
 } ) .
 }
-""" ] ] .
+""" ] ],
+        [ rdfs:comment "A Filter shall have at least one inlet." ;
+            sh:minCount 1 ;
+            sh:path s223:hasConnectionPoint ;
+            sh:qualifiedMinCount 1 ;
+            sh:qualifiedValueShape [ sh:class s223:InletConnectionPoint ] ],
+        [ rdfs:comment "A Filter shall have at least one outlet." ;
+            sh:minCount 1 ;
+            sh:path s223:hasConnectionPoint ;
+            sh:qualifiedMinCount 1 ;
+            sh:qualifiedValueShape [ sh:class s223:OutletConnectionPoint ] ] .
 
 s223:LineNeutralVoltage-110V a s223:Class,
         s223:LineNeutralVoltage-110V,
@@ -9745,6 +9755,16 @@ bldg:nrel00000001 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000365 .
 
+bldg:nrel00000022 a s223:Duct ;
+    rdfs:label "nrel00000022" ;
+    s223:cnx bldg:nrel00000190,
+        bldg:nrel00000366 ;
+    s223:connectsAt bldg:nrel00000190,
+        bldg:nrel00000366 ;
+    s223:connectsFrom bldg:nrel00001231 ;
+    s223:connectsTo bldg:nrel00000782 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000025 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000025" ;
     s223:cnx bldg:nrel00000205,
@@ -9768,6 +9788,26 @@ bldg:nrel00000043 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000907 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001113 .
+
+bldg:nrel00000077 a s223:Duct ;
+    rdfs:label "nrel00000077" ;
+    s223:cnx bldg:nrel00000424,
+        bldg:nrel00000892 ;
+    s223:connectsAt bldg:nrel00000424,
+        bldg:nrel00000892 ;
+    s223:connectsFrom bldg:nrel00000254 ;
+    s223:connectsTo bldg:nrel00000446 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000088 a s223:Duct ;
+    rdfs:label "nrel00000088" ;
+    s223:cnx bldg:nrel00000986,
+        bldg:nrel00001194 ;
+    s223:connectsAt bldg:nrel00000986,
+        bldg:nrel00001194 ;
+    s223:connectsFrom bldg:nrel00001297 ;
+    s223:connectsTo bldg:nrel00000587 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000095 a s223:TerminalUnit ;
     rdfs:label "nrel00000095" ;
@@ -9820,6 +9860,16 @@ bldg:nrel00000121 a s223:PhysicalSpace ;
     s223:hasProperty bldg:nrel00000071,
         bldg:nrel00000576 .
 
+bldg:nrel00000130 a s223:Duct ;
+    rdfs:label "nrel00000130" ;
+    s223:cnx bldg:nrel00000380,
+        bldg:nrel00000579 ;
+    s223:connectsAt bldg:nrel00000380,
+        bldg:nrel00000579 ;
+    s223:connectsFrom bldg:nrel00000755 ;
+    s223:connectsTo bldg:nrel00000533 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000131 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000131" ;
     s223:cnx bldg:nrel00000209,
@@ -9834,6 +9884,15 @@ bldg:nrel00000134 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:hasProperty bldg:nrel00000669 ;
     s223:isConnectionPointOf bldg:nrel00000746 .
+
+bldg:nrel00000149 a s223:Duct ;
+    rdfs:label "nrel00000149" ;
+    s223:cnx bldg:nrel00000211,
+        bldg:nrel00000942 ;
+    s223:connectsAt bldg:nrel00000211,
+        bldg:nrel00000942 ;
+    s223:connectsFrom bldg:nrel00000982 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000151 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000151" ;
@@ -9856,6 +9915,26 @@ bldg:nrel00000160 a s223:PhysicalSpace ;
     s223:encloses bldg:nrel00000587 ;
     s223:hasProperty bldg:nrel00000225,
         bldg:nrel00001286 .
+
+bldg:nrel00000171 a s223:Duct ;
+    rdfs:label "nrel00000171" ;
+    s223:cnx bldg:nrel00000098,
+        bldg:nrel00001207 ;
+    s223:connectsAt bldg:nrel00000098,
+        bldg:nrel00001207 ;
+    s223:connectsFrom bldg:nrel00000966 ;
+    s223:connectsTo bldg:nrel00001308 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000172 a s223:Duct ;
+    rdfs:label "nrel00000172" ;
+    s223:cnx bldg:nrel00000351,
+        bldg:nrel00001180 ;
+    s223:connectsAt bldg:nrel00000351,
+        bldg:nrel00001180 ;
+    s223:connectsFrom bldg:nrel00001100 ;
+    s223:connectsTo bldg:nrel00001089 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000186 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000186" ;
@@ -9895,6 +9974,15 @@ bldg:nrel00000255 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000446 .
 
+bldg:nrel00000258 a s223:Duct ;
+    rdfs:label "nrel00000258" ;
+    s223:cnx bldg:nrel00000459,
+        bldg:nrel00001007 ;
+    s223:connectsAt bldg:nrel00000459,
+        bldg:nrel00001007 ;
+    s223:connectsTo bldg:nrel00000365 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000265 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000265" ;
     s223:cnx bldg:nrel00001096,
@@ -9917,6 +10005,16 @@ bldg:nrel00000282 a s223:PhysicalSpace ;
     s223:hasProperty bldg:nrel00000091,
         bldg:nrel00000113 .
 
+bldg:nrel00000285 a s223:Duct ;
+    rdfs:label "nrel00000285" ;
+    s223:cnx bldg:nrel00000059,
+        bldg:nrel00001161 ;
+    s223:connectsAt bldg:nrel00000059,
+        bldg:nrel00001161 ;
+    s223:connectsFrom bldg:nrel00000966 ;
+    s223:connectsTo bldg:nrel00000235 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000306 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000306" ;
     s223:cnx bldg:nrel00000328,
@@ -9933,11 +10031,31 @@ bldg:nrel00000307 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000771 .
 
+bldg:nrel00000328 a s223:Duct ;
+    rdfs:label "nrel00000328" ;
+    s223:cnx bldg:nrel00000306,
+        bldg:nrel00001262 ;
+    s223:connectsAt bldg:nrel00000306,
+        bldg:nrel00001262 ;
+    s223:connectsFrom bldg:nrel00000628 ;
+    s223:connectsTo bldg:nrel00000591 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000336 a s223:PhysicalSpace ;
     rdfs:label "nrel00000336" ;
     s223:encloses bldg:nrel00000818 ;
     s223:hasProperty bldg:nrel00000471,
         bldg:nrel00000680 .
+
+bldg:nrel00000346 a s223:Duct ;
+    rdfs:label "nrel00000346" ;
+    s223:cnx bldg:nrel00000439,
+        bldg:nrel00000873 ;
+    s223:connectsAt bldg:nrel00000439,
+        bldg:nrel00000873 ;
+    s223:connectsFrom bldg:nrel00001276 ;
+    s223:connectsTo bldg:nrel00000600 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000351 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000351" ;
@@ -9963,6 +10081,16 @@ bldg:nrel00000366 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001231 .
 
+bldg:nrel00000374 a s223:Duct ;
+    rdfs:label "nrel00000374" ;
+    s223:cnx bldg:nrel00000001,
+        bldg:nrel00000219 ;
+    s223:connectsAt bldg:nrel00000001,
+        bldg:nrel00000219 ;
+    s223:connectsFrom bldg:nrel00000365 ;
+    s223:connectsTo bldg:nrel00000862 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000380 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000380" ;
     s223:cnx bldg:nrel00000130,
@@ -9970,6 +10098,25 @@ bldg:nrel00000380 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000130 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000755 .
+
+bldg:nrel00000396 a s223:Duct ;
+    rdfs:label "nrel00000396" ;
+    s223:cnx bldg:nrel00000278,
+        bldg:nrel00000603 ;
+    s223:connectsAt bldg:nrel00000278,
+        bldg:nrel00000603 ;
+    s223:connectsTo bldg:nrel00000280 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000397 a s223:Duct ;
+    rdfs:label "nrel00000397" ;
+    s223:cnx bldg:nrel00000255,
+        bldg:nrel00000908 ;
+    s223:connectsAt bldg:nrel00000255,
+        bldg:nrel00000908 ;
+    s223:connectsFrom bldg:nrel00000446 ;
+    s223:connectsTo bldg:nrel00001087 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000399 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000399" ;
@@ -10002,6 +10149,16 @@ bldg:nrel00000424 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000077 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000254 .
+
+bldg:nrel00000426 a s223:Duct ;
+    rdfs:label "nrel00000426" ;
+    s223:cnx bldg:nrel00000971,
+        bldg:nrel00001144 ;
+    s223:connectsAt bldg:nrel00000971,
+        bldg:nrel00001144 ;
+    s223:connectsFrom bldg:nrel00000192 ;
+    s223:connectsTo bldg:nrel00001008 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000438 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000438" ;
@@ -10049,11 +10206,41 @@ bldg:nrel00000465 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001232 .
 
+bldg:nrel00000480 a s223:Duct ;
+    rdfs:label "nrel00000480" ;
+    s223:cnx bldg:nrel00000220,
+        bldg:nrel00000420 ;
+    s223:connectsAt bldg:nrel00000220,
+        bldg:nrel00000420 ;
+    s223:connectsFrom bldg:nrel00000038 ;
+    s223:connectsTo bldg:nrel00000080 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000490 a s223:Duct ;
+    rdfs:label "nrel00000490" ;
+    s223:cnx bldg:nrel00001020,
+        bldg:nrel00001200 ;
+    s223:connectsAt bldg:nrel00001020,
+        bldg:nrel00001200 ;
+    s223:connectsFrom bldg:nrel00000362 ;
+    s223:connectsTo bldg:nrel00000631 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000500 a s223:PhysicalSpace ;
     rdfs:label "nrel00000500" ;
     s223:encloses bldg:nrel00001125 ;
     s223:hasProperty bldg:nrel00000216,
         bldg:nrel00001168 .
+
+bldg:nrel00000502 a s223:Duct ;
+    rdfs:label "nrel00000502" ;
+    s223:cnx bldg:nrel00000846,
+        bldg:nrel00000948 ;
+    s223:connectsAt bldg:nrel00000846,
+        bldg:nrel00000948 ;
+    s223:connectsFrom bldg:nrel00000435 ;
+    s223:connectsTo bldg:nrel00000941 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000512 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000512" ;
@@ -10062,6 +10249,35 @@ bldg:nrel00000512 a s223:InletConnectionPoint ;
     s223:connectsThrough bldg:nrel00001143 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000233 .
+
+bldg:nrel00000517 a s223:Duct ;
+    rdfs:label "nrel00000517" ;
+    s223:cnx bldg:nrel00000307,
+        bldg:nrel00000618 ;
+    s223:connectsAt bldg:nrel00000307,
+        bldg:nrel00000618 ;
+    s223:connectsFrom bldg:nrel00001089 ;
+    s223:connectsTo bldg:nrel00000771 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000535 a s223:Duct ;
+    rdfs:label "nrel00000535" ;
+    s223:cnx bldg:nrel00000691,
+        bldg:nrel00000699 ;
+    s223:connectsAt bldg:nrel00000691,
+        bldg:nrel00000699 ;
+    s223:connectsFrom bldg:nrel00000771 ;
+    s223:connectsTo bldg:nrel00000675 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000549 a s223:Duct ;
+    rdfs:label "nrel00000549" ;
+    s223:cnx bldg:nrel00000050,
+        bldg:nrel00000760 ;
+    s223:connectsAt bldg:nrel00000050,
+        bldg:nrel00000760 ;
+    s223:connectsTo bldg:nrel00000746 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000553 a s223:PhysicalSpace ;
     rdfs:label "nrel00000553" ;
@@ -10102,6 +10318,16 @@ bldg:nrel00000586 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000061 .
 
+bldg:nrel00000589 a s223:Duct ;
+    rdfs:label "nrel00000589" ;
+    s223:cnx bldg:nrel00000240,
+        bldg:nrel00000903 ;
+    s223:connectsAt bldg:nrel00000240,
+        bldg:nrel00000903 ;
+    s223:connectsFrom bldg:nrel00000007 ;
+    s223:connectsTo bldg:nrel00000061 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000597 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000597" ;
     s223:cnx bldg:nrel00000262,
@@ -10117,6 +10343,26 @@ bldg:nrel00000603 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000396 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001305 .
+
+bldg:nrel00000605 a s223:Duct ;
+    rdfs:label "nrel00000605" ;
+    s223:cnx bldg:nrel00000151,
+        bldg:nrel00001229 ;
+    s223:connectsAt bldg:nrel00000151,
+        bldg:nrel00001229 ;
+    s223:connectsFrom bldg:nrel00000815 ;
+    s223:connectsTo bldg:nrel00000084 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000615 a s223:Duct ;
+    rdfs:label "nrel00000615" ;
+    s223:cnx bldg:nrel00000281,
+        bldg:nrel00000354 ;
+    s223:connectsAt bldg:nrel00000281,
+        bldg:nrel00000354 ;
+    s223:connectsFrom bldg:nrel00000958 ;
+    s223:connectsTo bldg:nrel00000939 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000618 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000618" ;
@@ -10134,6 +10380,26 @@ bldg:nrel00000640 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001305 .
 
+bldg:nrel00000642 a s223:Duct ;
+    rdfs:label "nrel00000642" ;
+    s223:cnx bldg:nrel00000586,
+        bldg:nrel00000923 ;
+    s223:connectsAt bldg:nrel00000586,
+        bldg:nrel00000923 ;
+    s223:connectsFrom bldg:nrel00000061 ;
+    s223:connectsTo bldg:nrel00000683 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000678 a s223:Duct ;
+    rdfs:label "nrel00000678" ;
+    s223:cnx bldg:nrel00000931,
+        bldg:nrel00001256 ;
+    s223:connectsAt bldg:nrel00000931,
+        bldg:nrel00001256 ;
+    s223:connectsFrom bldg:nrel00000053 ;
+    s223:connectsTo bldg:nrel00000007 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000691 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000691" ;
     s223:cnx bldg:nrel00000535,
@@ -10149,6 +10415,15 @@ bldg:nrel00000699 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000535 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000771 .
+
+bldg:nrel00000701 a s223:Duct ;
+    rdfs:label "nrel00000701" ;
+    s223:cnx bldg:nrel00001025,
+        bldg:nrel00001203 ;
+    s223:connectsAt bldg:nrel00001025,
+        bldg:nrel00001203 ;
+    s223:connectsTo bldg:nrel00000789 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000708 a s223:PhysicalSpace ;
     rdfs:label "nrel00000708" ;
@@ -10172,6 +10447,35 @@ bldg:nrel00000724 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000262 .
 
+bldg:nrel00000725 a s223:Duct ;
+    rdfs:label "nrel00000725" ;
+    s223:cnx bldg:nrel00000441,
+        bldg:nrel00000590 ;
+    s223:connectsAt bldg:nrel00000441,
+        bldg:nrel00000590 ;
+    s223:connectsFrom bldg:nrel00000187 ;
+    s223:connectsTo bldg:nrel00001197 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000731 a s223:Duct ;
+    rdfs:label "nrel00000731" ;
+    s223:cnx bldg:nrel00000640,
+        bldg:nrel00001270 ;
+    s223:connectsAt bldg:nrel00000640,
+        bldg:nrel00001270 ;
+    s223:connectsTo bldg:nrel00000038 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000759 a s223:Duct ;
+    rdfs:label "nrel00000759" ;
+    s223:cnx bldg:nrel00000025,
+        bldg:nrel00000040 ;
+    s223:connectsAt bldg:nrel00000025,
+        bldg:nrel00000040 ;
+    s223:connectsFrom bldg:nrel00000205 ;
+    s223:connectsTo bldg:nrel00000273 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000760 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000760" ;
     s223:cnx bldg:nrel00000058,
@@ -10180,6 +10484,15 @@ bldg:nrel00000760 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000058 .
 
+bldg:nrel00000768 a s223:Duct ;
+    rdfs:label "nrel00000768" ;
+    s223:cnx bldg:nrel00001047,
+        bldg:nrel00001068 ;
+    s223:connectsAt bldg:nrel00001047,
+        bldg:nrel00001068 ;
+    s223:connectsTo bldg:nrel00000187 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000775 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000775" ;
     s223:cnx bldg:nrel00000902,
@@ -10187,6 +10500,15 @@ bldg:nrel00000775 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000902 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001305 .
+
+bldg:nrel00000783 a s223:Duct ;
+    rdfs:label "nrel00000783" ;
+    s223:cnx bldg:nrel00000970,
+        bldg:nrel00000984 ;
+    s223:connectsAt bldg:nrel00000970,
+        bldg:nrel00000984 ;
+    s223:connectsFrom bldg:nrel00001308 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000786 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000786" ;
@@ -10220,6 +10542,44 @@ bldg:nrel00000806 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001305 .
 
+bldg:nrel00000807 a s223:Duct ;
+    rdfs:label "nrel00000807" ;
+    s223:cnx bldg:nrel00000045,
+        bldg:nrel00001157 ;
+    s223:connectsAt bldg:nrel00000045,
+        bldg:nrel00001157 ;
+    s223:connectsFrom bldg:nrel00000280 ;
+    s223:connectsTo bldg:nrel00000736 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000813 a s223:Duct ;
+    rdfs:label "nrel00000813" ;
+    s223:cnx bldg:nrel00001107,
+        bldg:nrel00001302 ;
+    s223:connectsAt bldg:nrel00001107,
+        bldg:nrel00001302 ;
+    s223:connectsFrom bldg:nrel00000110 ;
+    s223:connectsTo bldg:nrel00000460 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000822 a s223:Duct ;
+    rdfs:label "nrel00000822" ;
+    s223:cnx bldg:nrel00000355,
+        bldg:nrel00000438 ;
+    s223:connectsAt bldg:nrel00000355,
+        bldg:nrel00000438 ;
+    s223:connectsTo bldg:nrel00000209 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000838 a s223:Duct ;
+    rdfs:label "nrel00000838" ;
+    s223:cnx bldg:nrel00000399,
+        bldg:nrel00000714 ;
+    s223:connectsAt bldg:nrel00000399,
+        bldg:nrel00000714 ;
+    s223:connectsTo bldg:nrel00000362 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000859 a s223:PhysicalSpace ;
     rdfs:label "nrel00000859" ;
     s223:encloses bldg:nrel00000080 ;
@@ -10242,6 +10602,16 @@ bldg:nrel00000873 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001276 .
 
+bldg:nrel00000875 a s223:Duct ;
+    rdfs:label "nrel00000875" ;
+    s223:cnx bldg:nrel00000107,
+        bldg:nrel00000899 ;
+    s223:connectsAt bldg:nrel00000107,
+        bldg:nrel00000899 ;
+    s223:connectsFrom bldg:nrel00001087 ;
+    s223:connectsTo bldg:nrel00000447 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000876 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000876" ;
     s223:cnx bldg:nrel00001096,
@@ -10249,6 +10619,16 @@ bldg:nrel00000876 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00001321 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001096 .
+
+bldg:nrel00000891 a s223:Duct ;
+    rdfs:label "nrel00000891" ;
+    s223:cnx bldg:nrel00000158,
+        bldg:nrel00000577 ;
+    s223:connectsAt bldg:nrel00000158,
+        bldg:nrel00000577 ;
+    s223:connectsFrom bldg:nrel00000429 ;
+    s223:connectsTo bldg:nrel00001100 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000892 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000892" ;
@@ -10266,6 +10646,15 @@ bldg:nrel00000899 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000447 .
 
+bldg:nrel00000902 a s223:Duct ;
+    rdfs:label "nrel00000902" ;
+    s223:cnx bldg:nrel00000100,
+        bldg:nrel00000775 ;
+    s223:connectsAt bldg:nrel00000100,
+        bldg:nrel00000775 ;
+    s223:connectsTo bldg:nrel00001276 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000903 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000903" ;
     s223:cnx bldg:nrel00000007,
@@ -10274,6 +10663,16 @@ bldg:nrel00000903 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000007 .
 
+bldg:nrel00000905 a s223:Duct ;
+    rdfs:label "nrel00000905" ;
+    s223:cnx bldg:nrel00000444,
+        bldg:nrel00000597 ;
+    s223:connectsAt bldg:nrel00000444,
+        bldg:nrel00000597 ;
+    s223:connectsFrom bldg:nrel00000262 ;
+    s223:connectsTo bldg:nrel00001267 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00000908 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000908" ;
     s223:cnx bldg:nrel00000397,
@@ -10281,6 +10680,16 @@ bldg:nrel00000908 a s223:InletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000397 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001087 .
+
+bldg:nrel00000911 a s223:Duct ;
+    rdfs:label "nrel00000911" ;
+    s223:cnx bldg:nrel00000869,
+        bldg:nrel00001183 ;
+    s223:connectsAt bldg:nrel00000869,
+        bldg:nrel00001183 ;
+    s223:connectsFrom bldg:nrel00000312 ;
+    s223:connectsTo bldg:nrel00000799 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000923 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000923" ;
@@ -10306,6 +10715,16 @@ bldg:nrel00000931 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000678 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000053 .
+
+bldg:nrel00000932 a s223:Duct ;
+    rdfs:label "nrel00000932" ;
+    s223:cnx bldg:nrel00000207,
+        bldg:nrel00001086 ;
+    s223:connectsAt bldg:nrel00000207,
+        bldg:nrel00001086 ;
+    s223:connectsFrom bldg:nrel00001185 ;
+    s223:connectsTo bldg:nrel00000818 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000938 a s223:TerminalUnit ;
     rdfs:label "nrel00000938" ;
@@ -10375,6 +10794,26 @@ bldg:nrel00000984 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000058 .
 
+bldg:nrel00000995 a s223:Duct ;
+    rdfs:label "nrel00000995" ;
+    s223:cnx bldg:nrel00000131,
+        bldg:nrel00001259 ;
+    s223:connectsAt bldg:nrel00000131,
+        bldg:nrel00001259 ;
+    s223:connectsFrom bldg:nrel00000209 ;
+    s223:connectsTo bldg:nrel00001125 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00000998 a s223:Duct ;
+    rdfs:label "nrel00000998" ;
+    s223:cnx bldg:nrel00000465,
+        bldg:nrel00000786 ;
+    s223:connectsAt bldg:nrel00000465,
+        bldg:nrel00000786 ;
+    s223:connectsFrom bldg:nrel00001223 ;
+    s223:connectsTo bldg:nrel00001232 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00001007 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001007" ;
     s223:cnx bldg:nrel00000258,
@@ -10390,6 +10829,25 @@ bldg:nrel00001020 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000490 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000362 .
+
+bldg:nrel00001021 a s223:Duct ;
+    rdfs:label "nrel00001021" ;
+    s223:cnx bldg:nrel00000186,
+        bldg:nrel00001301 ;
+    s223:connectsAt bldg:nrel00000186,
+        bldg:nrel00001301 ;
+    s223:connectsFrom bldg:nrel00000789 ;
+    s223:connectsTo bldg:nrel00001267 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00001024 a s223:Duct ;
+    rdfs:label "nrel00001024" ;
+    s223:cnx bldg:nrel00000208,
+        bldg:nrel00000947 ;
+    s223:connectsAt bldg:nrel00000208,
+        bldg:nrel00000947 ;
+    s223:connectsTo bldg:nrel00000958 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00001025 a s223:InletConnectionPoint ;
     rdfs:label "nrel00001025" ;
@@ -10421,6 +10879,15 @@ bldg:nrel00001080 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001305 .
 
+bldg:nrel00001101 a s223:Duct ;
+    rdfs:label "nrel00001101" ;
+    s223:cnx bldg:nrel00000806,
+        bldg:nrel00000864 ;
+    s223:connectsAt bldg:nrel00000806,
+        bldg:nrel00000864 ;
+    s223:connectsTo bldg:nrel00001185 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00001107 a s223:InletConnectionPoint ;
     rdfs:label "nrel00001107" ;
     s223:cnx bldg:nrel00000460,
@@ -10434,6 +10901,15 @@ bldg:nrel00001121 a s223:PhysicalSpace ;
     s223:encloses bldg:nrel00001197 ;
     s223:hasProperty bldg:nrel00000009,
         bldg:nrel00000068 .
+
+bldg:nrel00001143 a s223:Duct ;
+    rdfs:label "nrel00001143" ;
+    s223:cnx bldg:nrel00000512,
+        bldg:nrel00001193 ;
+    s223:connectsAt bldg:nrel00000512,
+        bldg:nrel00001193 ;
+    s223:connectsTo bldg:nrel00000233 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00001144 a s223:InletConnectionPoint ;
     rdfs:label "nrel00001144" ;
@@ -10499,6 +10975,16 @@ bldg:nrel00001183 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000799 .
 
+bldg:nrel00001186 a s223:Duct ;
+    rdfs:label "nrel00001186" ;
+    s223:cnx bldg:nrel00000074,
+        bldg:nrel00001208 ;
+    s223:connectsAt bldg:nrel00000074,
+        bldg:nrel00001208 ;
+    s223:connectsFrom bldg:nrel00000233 ;
+    s223:connectsTo bldg:nrel00000122 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00001193 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001193" ;
     s223:cnx bldg:nrel00001143,
@@ -10506,6 +10992,16 @@ bldg:nrel00001193 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00001143 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00001305 .
+
+bldg:nrel00001198 a s223:Duct ;
+    rdfs:label "nrel00001198" ;
+    s223:cnx bldg:nrel00000461,
+        bldg:nrel00001166 ;
+    s223:connectsAt bldg:nrel00000461,
+        bldg:nrel00001166 ;
+    s223:connectsFrom bldg:nrel00000447 ;
+    s223:connectsTo bldg:nrel00000053 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00001203 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001203" ;
@@ -10530,6 +11026,25 @@ bldg:nrel00001208 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00001186 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000233 .
+
+bldg:nrel00001211 a s223:Duct ;
+    rdfs:label "nrel00001211" ;
+    s223:cnx bldg:nrel00000406,
+        bldg:nrel00000574 ;
+    s223:connectsAt bldg:nrel00000406,
+        bldg:nrel00000574 ;
+    s223:connectsFrom bldg:nrel00000675 ;
+    s223:connectsTo bldg:nrel00001119 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00001219 a s223:Duct ;
+    rdfs:label "nrel00001219" ;
+    s223:cnx bldg:nrel00000462,
+        bldg:nrel00000924 ;
+    s223:connectsAt bldg:nrel00000462,
+        bldg:nrel00000924 ;
+    s223:connectsTo bldg:nrel00000435 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00001229 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001229" ;
@@ -10594,6 +11109,24 @@ bldg:nrel00001270 a s223:InletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000038 .
 
+bldg:nrel00001277 a s223:Duct ;
+    rdfs:label "nrel00001277" ;
+    s223:cnx bldg:nrel00001080,
+        bldg:nrel00001123 ;
+    s223:connectsAt bldg:nrel00001080,
+        bldg:nrel00001123 ;
+    s223:connectsTo bldg:nrel00001297 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00001278 a s223:Duct ;
+    rdfs:label "nrel00001278" ;
+    s223:cnx bldg:nrel00001260,
+        bldg:nrel00001311 ;
+    s223:connectsAt bldg:nrel00001260,
+        bldg:nrel00001311 ;
+    s223:connectsFrom bldg:nrel00000235 ;
+    s223:hasMedium s223:Medium-Air .
+
 bldg:nrel00001301 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001301" ;
     s223:cnx bldg:nrel00000789,
@@ -10609,6 +11142,23 @@ bldg:nrel00001302 a s223:OutletConnectionPoint ;
     s223:connectsThrough bldg:nrel00000813 ;
     s223:hasMedium s223:Medium-Air ;
     s223:isConnectionPointOf bldg:nrel00000110 .
+
+bldg:nrel00001321 a s223:Duct ;
+    rdfs:label "nrel00001321" ;
+    s223:cnx bldg:nrel00000265,
+        bldg:nrel00000876 ;
+    s223:connectsAt bldg:nrel00000265,
+        bldg:nrel00000876 ;
+    s223:hasMedium s223:Medium-Air .
+
+bldg:nrel00001325 a s223:Duct ;
+    rdfs:label "nrel00001325" ;
+    s223:cnx bldg:nrel00000724,
+        bldg:nrel00000802 ;
+    s223:connectsAt bldg:nrel00000724,
+        bldg:nrel00000802 ;
+    s223:connectsTo bldg:nrel00000262 ;
+    s223:hasMedium s223:Medium-Air .
 
 s223:Damper a s223:Class,
         sh:NodeShape ;
@@ -11462,6 +12012,24 @@ bldg:nrel00000733 a s223:Valve ;
     s223:hasProperty bldg:nrel00000357,
         bldg:nrel00001017 .
 
+bldg:nrel00000746 a s223:EAU,
+        s223:Equipment ;
+    rdfs:label "nrel00000746" ;
+    s223:cnx bldg:nrel00000050,
+        bldg:nrel00000134 ;
+    s223:contains bldg:nrel00000343,
+        bldg:nrel00000429,
+        bldg:nrel00000675,
+        bldg:nrel00000771,
+        bldg:nrel00001003,
+        bldg:nrel00001089,
+        bldg:nrel00001100,
+        bldg:nrel00001119 ;
+    s223:hasConnectionPoint bldg:nrel00000050,
+        bldg:nrel00000134 ;
+    s223:hasProperty bldg:nrel00000669,
+        bldg:nrel00000853 .
+
 bldg:nrel00000754 a s223:Pump ;
     rdfs:label "nrel00000754" ;
     s223:cnx bldg:nrel00000376,
@@ -11611,6 +12179,24 @@ bldg:nrel00000970 a s223:OutletConnectionPoint ;
     s223:hasMedium s223:Medium-Air ;
     s223:hasProperty bldg:nrel00001272 ;
     s223:isConnectionPointOf bldg:nrel00001308 .
+
+bldg:nrel00000982 a s223:AirHandlingUnit ;
+    rdfs:label "nrel00000982" ;
+    s223:cnx bldg:nrel00000078,
+        bldg:nrel00000211 ;
+    s223:contains bldg:nrel00000007,
+        bldg:nrel00000053,
+        bldg:nrel00000061,
+        bldg:nrel00000254,
+        bldg:nrel00000446,
+        bldg:nrel00000447,
+        bldg:nrel00000683,
+        bldg:nrel00000992,
+        bldg:nrel00001087 ;
+    s223:hasConnectionPoint bldg:nrel00000078,
+        bldg:nrel00000211 ;
+    s223:hasProperty bldg:nrel00000034,
+        bldg:nrel00001070 .
 
 bldg:nrel00000986 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000986" ;
@@ -11797,16 +12383,6 @@ bldg:nrel00001311 a s223:OutletConnectionPoint ;
     s223:hasProperty bldg:nrel00000575 ;
     s223:isConnectionPointOf bldg:nrel00000235 .
 
-bldg:nrel00001321 a s223:Duct ;
-    rdfs:label "nrel00001321" ;
-    s223:cnx bldg:nrel00000265,
-        bldg:nrel00000876 ;
-    s223:connectsAt bldg:nrel00000265,
-        bldg:nrel00000876 ;
-    s223:connectsFrom bldg:nrel00001096 ;
-    s223:connectsTo bldg:nrel00001096 ;
-    s223:hasMedium s223:Medium-Air .
-
 s223:BidirectionalConnectionPoint a s223:Class,
         sh:NodeShape ;
     rdfs:label "Bidirectional Connection Point" ;
@@ -11862,15 +12438,22 @@ s223:hasObservationLocation a rdf:Property ;
 
 qudt:hasUnit rdfs:comment "A reference to the unit of measure of a QuantifiableProperty of interest." .
 
-bldg:nrel00000022 a s223:Duct ;
-    rdfs:label "nrel00000022" ;
-    s223:cnx bldg:nrel00000190,
-        bldg:nrel00000366 ;
-    s223:connectsAt bldg:nrel00000190,
-        bldg:nrel00000366 ;
-    s223:connectsFrom bldg:nrel00001231 ;
-    s223:connectsTo bldg:nrel00000782 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000038 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000038" ;
+    s223:cnx bldg:nrel00000420,
+        bldg:nrel00001270 ;
+    s223:contains bldg:nrel00000495,
+        bldg:nrel00000780,
+        bldg:nrel00001187 ;
+    s223:hasConnectionPoint bldg:nrel00000420,
+        bldg:nrel00001270 ;
+    s223:hasProperty bldg:nrel00000173,
+        bldg:nrel00000212,
+        bldg:nrel00000228,
+        bldg:nrel00000329,
+        bldg:nrel00000884 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
 
 bldg:nrel00000050 a s223:InletConnectionPoint ;
     rdfs:label "nrel00000050" ;
@@ -11881,65 +12464,74 @@ bldg:nrel00000050 a s223:InletConnectionPoint ;
     s223:hasProperty bldg:nrel00000853 ;
     s223:isConnectionPointOf bldg:nrel00000746 .
 
-bldg:nrel00000077 a s223:Duct ;
-    rdfs:label "nrel00000077" ;
-    s223:cnx bldg:nrel00000424,
-        bldg:nrel00000892 ;
-    s223:connectsAt bldg:nrel00000424,
-        bldg:nrel00000892 ;
-    s223:connectsFrom bldg:nrel00000254 ;
-    s223:connectsTo bldg:nrel00000446 ;
+bldg:nrel00000058 a s223:Junction ;
+    rdfs:label "nrel00000058" ;
+    s223:cnx bldg:nrel00000760,
+        bldg:nrel00000984,
+        bldg:nrel00001260 ;
+    s223:hasConnectionPoint bldg:nrel00000760,
+        bldg:nrel00000984,
+        bldg:nrel00001260 ;
     s223:hasMedium s223:Medium-Air .
 
-bldg:nrel00000088 a s223:Duct ;
-    rdfs:label "nrel00000088" ;
-    s223:cnx bldg:nrel00000986,
-        bldg:nrel00001194 ;
-    s223:connectsAt bldg:nrel00000986,
-        bldg:nrel00001194 ;
-    s223:connectsFrom bldg:nrel00001297 ;
-    s223:connectsTo bldg:nrel00000587 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000110 a s223:Valve ;
+    rdfs:label "nrel00000110" ;
+    s223:cnx bldg:nrel00001036,
+        bldg:nrel00001302 ;
+    s223:hasConnectionPoint bldg:nrel00001036,
+        bldg:nrel00001302 ;
+    s223:hasProperty bldg:nrel00000634,
+        bldg:nrel00001137 .
 
-bldg:nrel00000130 a s223:Duct ;
-    rdfs:label "nrel00000130" ;
-    s223:cnx bldg:nrel00000380,
-        bldg:nrel00000579 ;
-    s223:connectsAt bldg:nrel00000380,
-        bldg:nrel00000579 ;
-    s223:connectsFrom bldg:nrel00000755 ;
-    s223:connectsTo bldg:nrel00000533 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000187 a s223:TerminalUnit ;
+    rdfs:label "nrel00000187" ;
+    s223:cnx bldg:nrel00000441,
+        bldg:nrel00001047 ;
+    s223:contains bldg:nrel00000205,
+        bldg:nrel00000273,
+        bldg:nrel00000369,
+        bldg:nrel00000925,
+        bldg:nrel00001315 ;
+    s223:hasConnectionPoint bldg:nrel00000441,
+        bldg:nrel00001047 ;
+    s223:hasProperty bldg:nrel00000118,
+        bldg:nrel00000132,
+        bldg:nrel00000758 .
 
-bldg:nrel00000149 a s223:Duct ;
-    rdfs:label "nrel00000149" ;
-    s223:cnx bldg:nrel00000211,
-        bldg:nrel00000942 ;
-    s223:connectsAt bldg:nrel00000211,
-        bldg:nrel00000942 ;
-    s223:connectsFrom bldg:nrel00000982 ;
-    s223:connectsTo bldg:nrel00001305 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000192 a s223:Valve ;
+    rdfs:label "nrel00000192" ;
+    s223:cnx bldg:nrel00000971,
+        bldg:nrel00001169 ;
+    s223:hasConnectionPoint bldg:nrel00000971,
+        bldg:nrel00001169 ;
+    s223:hasProperty bldg:nrel00001060,
+        bldg:nrel00001327 .
 
-bldg:nrel00000171 a s223:Duct ;
-    rdfs:label "nrel00000171" ;
-    s223:cnx bldg:nrel00000098,
-        bldg:nrel00001207 ;
-    s223:connectsAt bldg:nrel00000098,
-        bldg:nrel00001207 ;
-    s223:connectsFrom bldg:nrel00000966 ;
-    s223:connectsTo bldg:nrel00001308 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000205 a s223:Valve ;
+    rdfs:label "nrel00000205" ;
+    s223:cnx bldg:nrel00000025,
+        bldg:nrel00000076 ;
+    s223:hasConnectionPoint bldg:nrel00000025,
+        bldg:nrel00000076 ;
+    s223:hasProperty bldg:nrel00000194,
+        bldg:nrel00000299 .
 
-bldg:nrel00000172 a s223:Duct ;
-    rdfs:label "nrel00000172" ;
-    s223:cnx bldg:nrel00000351,
-        bldg:nrel00001180 ;
-    s223:connectsAt bldg:nrel00000351,
-        bldg:nrel00001180 ;
-    s223:connectsFrom bldg:nrel00001100 ;
-    s223:connectsTo bldg:nrel00001089 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000209 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000209" ;
+    s223:cnx bldg:nrel00000131,
+        bldg:nrel00000355 ;
+    s223:contains bldg:nrel00000099,
+        bldg:nrel00000135,
+        bldg:nrel00000904 ;
+    s223:hasConnectionPoint bldg:nrel00000131,
+        bldg:nrel00000355 ;
+    s223:hasProperty bldg:nrel00000392,
+        bldg:nrel00000752,
+        bldg:nrel00000805,
+        bldg:nrel00001160,
+        bldg:nrel00001233 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
 
 bldg:nrel00000211 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000211" ;
@@ -11950,355 +12542,210 @@ bldg:nrel00000211 a s223:OutletConnectionPoint ;
     s223:hasProperty bldg:nrel00000034 ;
     s223:isConnectionPointOf bldg:nrel00000982 .
 
-bldg:nrel00000258 a s223:Duct ;
-    rdfs:label "nrel00000258" ;
-    s223:cnx bldg:nrel00000459,
-        bldg:nrel00001007 ;
-    s223:connectsAt bldg:nrel00000459,
-        bldg:nrel00001007 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000365 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000233 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000233" ;
+    s223:cnx bldg:nrel00000512,
+        bldg:nrel00001208 ;
+    s223:contains bldg:nrel00000226,
+        bldg:nrel00000568,
+        bldg:nrel00001291 ;
+    s223:hasConnectionPoint bldg:nrel00000512,
+        bldg:nrel00001208 ;
+    s223:hasProperty bldg:nrel00000115,
+        bldg:nrel00000348,
+        bldg:nrel00000451,
+        bldg:nrel00001002,
+        bldg:nrel00001212 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
 
-bldg:nrel00000285 a s223:Duct ;
-    rdfs:label "nrel00000285" ;
-    s223:cnx bldg:nrel00000059,
-        bldg:nrel00001161 ;
-    s223:connectsAt bldg:nrel00000059,
-        bldg:nrel00001161 ;
-    s223:connectsFrom bldg:nrel00000966 ;
-    s223:connectsTo bldg:nrel00000235 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000235 a s223:Fan ;
+    rdfs:label "nrel00000235" ;
+    s223:cnx bldg:nrel00001161,
+        bldg:nrel00001311 ;
+    s223:contains bldg:nrel00000413,
+        bldg:nrel00000887 ;
+    s223:hasConnectionPoint bldg:nrel00001161,
+        bldg:nrel00001311 ;
+    s223:hasProperty bldg:nrel00000231,
+        bldg:nrel00000294,
+        bldg:nrel00000575,
+        bldg:nrel00000766,
+        bldg:nrel00000835,
+        bldg:nrel00000951,
+        bldg:nrel00001177,
+        bldg:nrel00001202,
+        bldg:nrel00001216,
+        bldg:nrel00001281,
+        bldg:nrel00001332 .
 
-bldg:nrel00000328 a s223:Duct ;
-    rdfs:label "nrel00000328" ;
-    s223:cnx bldg:nrel00000306,
-        bldg:nrel00001262 ;
-    s223:connectsAt bldg:nrel00000306,
-        bldg:nrel00001262 ;
-    s223:connectsFrom bldg:nrel00000628 ;
-    s223:connectsTo bldg:nrel00000591 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000254 a s223:Damper ;
+    rdfs:label "nrel00000254" ;
+    s223:cnx bldg:nrel00000424,
+        bldg:nrel00001274 ;
+    s223:hasConnectionPoint bldg:nrel00000424,
+        bldg:nrel00001274 ;
+    s223:hasProperty bldg:nrel00000288,
+        bldg:nrel00000617 .
 
-bldg:nrel00000346 a s223:Duct ;
-    rdfs:label "nrel00000346" ;
-    s223:cnx bldg:nrel00000439,
-        bldg:nrel00000873 ;
-    s223:connectsAt bldg:nrel00000439,
-        bldg:nrel00000873 ;
-    s223:connectsFrom bldg:nrel00001276 ;
-    s223:connectsTo bldg:nrel00000600 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000262 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000262" ;
+    s223:cnx bldg:nrel00000597,
+        bldg:nrel00000724 ;
+    s223:contains bldg:nrel00000035,
+        bldg:nrel00000505,
+        bldg:nrel00000729 ;
+    s223:hasConnectionPoint bldg:nrel00000597,
+        bldg:nrel00000724 ;
+    s223:hasProperty bldg:nrel00000070,
+        bldg:nrel00000405,
+        bldg:nrel00000551,
+        bldg:nrel00000980,
+        bldg:nrel00001011 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
 
-bldg:nrel00000374 a s223:Duct ;
-    rdfs:label "nrel00000374" ;
-    s223:cnx bldg:nrel00000001,
-        bldg:nrel00000219 ;
-    s223:connectsAt bldg:nrel00000001,
-        bldg:nrel00000219 ;
-    s223:connectsFrom bldg:nrel00000365 ;
-    s223:connectsTo bldg:nrel00000862 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000396 a s223:Duct ;
-    rdfs:label "nrel00000396" ;
+bldg:nrel00000280 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000280" ;
     s223:cnx bldg:nrel00000278,
-        bldg:nrel00000603 ;
-    s223:connectsAt bldg:nrel00000278,
-        bldg:nrel00000603 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000280 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000397 a s223:Duct ;
-    rdfs:label "nrel00000397" ;
-    s223:cnx bldg:nrel00000255,
-        bldg:nrel00000908 ;
-    s223:connectsAt bldg:nrel00000255,
-        bldg:nrel00000908 ;
-    s223:connectsFrom bldg:nrel00000446 ;
-    s223:connectsTo bldg:nrel00001087 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000426 a s223:Duct ;
-    rdfs:label "nrel00000426" ;
-    s223:cnx bldg:nrel00000971,
-        bldg:nrel00001144 ;
-    s223:connectsAt bldg:nrel00000971,
-        bldg:nrel00001144 ;
-    s223:connectsFrom bldg:nrel00000192 ;
-    s223:connectsTo bldg:nrel00001008 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000480 a s223:Duct ;
-    rdfs:label "nrel00000480" ;
-    s223:cnx bldg:nrel00000220,
-        bldg:nrel00000420 ;
-    s223:connectsAt bldg:nrel00000220,
-        bldg:nrel00000420 ;
-    s223:connectsFrom bldg:nrel00000038 ;
-    s223:connectsTo bldg:nrel00000080 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000490 a s223:Duct ;
-    rdfs:label "nrel00000490" ;
-    s223:cnx bldg:nrel00001020,
-        bldg:nrel00001200 ;
-    s223:connectsAt bldg:nrel00001020,
-        bldg:nrel00001200 ;
-    s223:connectsFrom bldg:nrel00000362 ;
-    s223:connectsTo bldg:nrel00000631 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000502 a s223:Duct ;
-    rdfs:label "nrel00000502" ;
-    s223:cnx bldg:nrel00000846,
-        bldg:nrel00000948 ;
-    s223:connectsAt bldg:nrel00000846,
-        bldg:nrel00000948 ;
-    s223:connectsFrom bldg:nrel00000435 ;
-    s223:connectsTo bldg:nrel00000941 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000517 a s223:Duct ;
-    rdfs:label "nrel00000517" ;
-    s223:cnx bldg:nrel00000307,
-        bldg:nrel00000618 ;
-    s223:connectsAt bldg:nrel00000307,
-        bldg:nrel00000618 ;
-    s223:connectsFrom bldg:nrel00001089 ;
-    s223:connectsTo bldg:nrel00000771 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000535 a s223:Duct ;
-    rdfs:label "nrel00000535" ;
-    s223:cnx bldg:nrel00000691,
-        bldg:nrel00000699 ;
-    s223:connectsAt bldg:nrel00000691,
-        bldg:nrel00000699 ;
-    s223:connectsFrom bldg:nrel00000771 ;
-    s223:connectsTo bldg:nrel00000675 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000549 a s223:Duct ;
-    rdfs:label "nrel00000549" ;
-    s223:cnx bldg:nrel00000050,
-        bldg:nrel00000760 ;
-    s223:connectsAt bldg:nrel00000050,
-        bldg:nrel00000760 ;
-    s223:connectsFrom bldg:nrel00000058 ;
-    s223:connectsTo bldg:nrel00000746 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000589 a s223:Duct ;
-    rdfs:label "nrel00000589" ;
-    s223:cnx bldg:nrel00000240,
-        bldg:nrel00000903 ;
-    s223:connectsAt bldg:nrel00000240,
-        bldg:nrel00000903 ;
-    s223:connectsFrom bldg:nrel00000007 ;
-    s223:connectsTo bldg:nrel00000061 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000605 a s223:Duct ;
-    rdfs:label "nrel00000605" ;
-    s223:cnx bldg:nrel00000151,
-        bldg:nrel00001229 ;
-    s223:connectsAt bldg:nrel00000151,
-        bldg:nrel00001229 ;
-    s223:connectsFrom bldg:nrel00000815 ;
-    s223:connectsTo bldg:nrel00000084 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000615 a s223:Duct ;
-    rdfs:label "nrel00000615" ;
-    s223:cnx bldg:nrel00000281,
-        bldg:nrel00000354 ;
-    s223:connectsAt bldg:nrel00000281,
-        bldg:nrel00000354 ;
-    s223:connectsFrom bldg:nrel00000958 ;
-    s223:connectsTo bldg:nrel00000939 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000642 a s223:Duct ;
-    rdfs:label "nrel00000642" ;
-    s223:cnx bldg:nrel00000586,
-        bldg:nrel00000923 ;
-    s223:connectsAt bldg:nrel00000586,
-        bldg:nrel00000923 ;
-    s223:connectsFrom bldg:nrel00000061 ;
-    s223:connectsTo bldg:nrel00000683 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000678 a s223:Duct ;
-    rdfs:label "nrel00000678" ;
-    s223:cnx bldg:nrel00000931,
-        bldg:nrel00001256 ;
-    s223:connectsAt bldg:nrel00000931,
-        bldg:nrel00001256 ;
-    s223:connectsFrom bldg:nrel00000053 ;
-    s223:connectsTo bldg:nrel00000007 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000701 a s223:Duct ;
-    rdfs:label "nrel00000701" ;
-    s223:cnx bldg:nrel00001025,
-        bldg:nrel00001203 ;
-    s223:connectsAt bldg:nrel00001025,
-        bldg:nrel00001203 ;
-    s223:connectsFrom bldg:nrel00001113 ;
-    s223:connectsTo bldg:nrel00000789 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000725 a s223:Duct ;
-    rdfs:label "nrel00000725" ;
-    s223:cnx bldg:nrel00000441,
-        bldg:nrel00000590 ;
-    s223:connectsAt bldg:nrel00000441,
-        bldg:nrel00000590 ;
-    s223:connectsFrom bldg:nrel00000187 ;
-    s223:connectsTo bldg:nrel00001197 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000731 a s223:Duct ;
-    rdfs:label "nrel00000731" ;
-    s223:cnx bldg:nrel00000640,
-        bldg:nrel00001270 ;
-    s223:connectsAt bldg:nrel00000640,
-        bldg:nrel00001270 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000038 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000759 a s223:Duct ;
-    rdfs:label "nrel00000759" ;
-    s223:cnx bldg:nrel00000025,
-        bldg:nrel00000040 ;
-    s223:connectsAt bldg:nrel00000025,
-        bldg:nrel00000040 ;
-    s223:connectsFrom bldg:nrel00000205 ;
-    s223:connectsTo bldg:nrel00000273 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000768 a s223:Duct ;
-    rdfs:label "nrel00000768" ;
-    s223:cnx bldg:nrel00001047,
-        bldg:nrel00001068 ;
-    s223:connectsAt bldg:nrel00001047,
-        bldg:nrel00001068 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000187 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000783 a s223:Duct ;
-    rdfs:label "nrel00000783" ;
-    s223:cnx bldg:nrel00000970,
-        bldg:nrel00000984 ;
-    s223:connectsAt bldg:nrel00000970,
-        bldg:nrel00000984 ;
-    s223:connectsFrom bldg:nrel00001308 ;
-    s223:connectsTo bldg:nrel00000058 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000807 a s223:Duct ;
-    rdfs:label "nrel00000807" ;
-    s223:cnx bldg:nrel00000045,
         bldg:nrel00001157 ;
-    s223:connectsAt bldg:nrel00000045,
+    s223:contains bldg:nrel00000003,
+        bldg:nrel00000055,
+        bldg:nrel00000848 ;
+    s223:hasConnectionPoint bldg:nrel00000278,
         bldg:nrel00001157 ;
-    s223:connectsFrom bldg:nrel00000280 ;
-    s223:connectsTo bldg:nrel00000736 ;
-    s223:hasMedium s223:Medium-Air .
+    s223:hasProperty bldg:nrel00000988,
+        bldg:nrel00001152,
+        bldg:nrel00001204,
+        bldg:nrel00001244,
+        bldg:nrel00001282 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
 
-bldg:nrel00000813 a s223:Duct ;
-    rdfs:label "nrel00000813" ;
-    s223:cnx bldg:nrel00001107,
-        bldg:nrel00001302 ;
-    s223:connectsAt bldg:nrel00001107,
-        bldg:nrel00001302 ;
-    s223:connectsFrom bldg:nrel00000110 ;
-    s223:connectsTo bldg:nrel00000460 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000822 a s223:Duct ;
-    rdfs:label "nrel00000822" ;
-    s223:cnx bldg:nrel00000355,
-        bldg:nrel00000438 ;
-    s223:connectsAt bldg:nrel00000355,
-        bldg:nrel00000438 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000209 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000838 a s223:Duct ;
-    rdfs:label "nrel00000838" ;
-    s223:cnx bldg:nrel00000399,
-        bldg:nrel00000714 ;
-    s223:connectsAt bldg:nrel00000399,
-        bldg:nrel00000714 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000362 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000875 a s223:Duct ;
-    rdfs:label "nrel00000875" ;
-    s223:cnx bldg:nrel00000107,
-        bldg:nrel00000899 ;
-    s223:connectsAt bldg:nrel00000107,
-        bldg:nrel00000899 ;
-    s223:connectsFrom bldg:nrel00001087 ;
-    s223:connectsTo bldg:nrel00000447 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000891 a s223:Duct ;
-    rdfs:label "nrel00000891" ;
-    s223:cnx bldg:nrel00000158,
-        bldg:nrel00000577 ;
-    s223:connectsAt bldg:nrel00000158,
-        bldg:nrel00000577 ;
-    s223:connectsFrom bldg:nrel00000429 ;
-    s223:connectsTo bldg:nrel00001100 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000902 a s223:Duct ;
-    rdfs:label "nrel00000902" ;
-    s223:cnx bldg:nrel00000100,
-        bldg:nrel00000775 ;
-    s223:connectsAt bldg:nrel00000100,
-        bldg:nrel00000775 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00001276 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000905 a s223:Duct ;
-    rdfs:label "nrel00000905" ;
-    s223:cnx bldg:nrel00000444,
-        bldg:nrel00000597 ;
-    s223:connectsAt bldg:nrel00000444,
-        bldg:nrel00000597 ;
-    s223:connectsFrom bldg:nrel00000262 ;
-    s223:connectsTo bldg:nrel00001267 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000911 a s223:Duct ;
-    rdfs:label "nrel00000911" ;
+bldg:nrel00000312 a s223:Valve ;
+    rdfs:label "nrel00000312" ;
     s223:cnx bldg:nrel00000869,
-        bldg:nrel00001183 ;
-    s223:connectsAt bldg:nrel00000869,
-        bldg:nrel00001183 ;
-    s223:connectsFrom bldg:nrel00000312 ;
-    s223:connectsTo bldg:nrel00000799 ;
-    s223:hasMedium s223:Medium-Air .
+        bldg:nrel00001228 ;
+    s223:hasConnectionPoint bldg:nrel00000869,
+        bldg:nrel00001228 ;
+    s223:hasProperty bldg:nrel00000047,
+        bldg:nrel00000196 .
 
-bldg:nrel00000932 a s223:Duct ;
-    rdfs:label "nrel00000932" ;
-    s223:cnx bldg:nrel00000207,
-        bldg:nrel00001086 ;
-    s223:connectsAt bldg:nrel00000207,
-        bldg:nrel00001086 ;
-    s223:connectsFrom bldg:nrel00001185 ;
-    s223:connectsTo bldg:nrel00000818 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000362 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000362" ;
+    s223:cnx bldg:nrel00000714,
+        bldg:nrel00001020 ;
+    s223:contains bldg:nrel00000830,
+        bldg:nrel00000839,
+        bldg:nrel00001176 ;
+    s223:hasConnectionPoint bldg:nrel00000714,
+        bldg:nrel00001020 ;
+    s223:hasProperty bldg:nrel00000527,
+        bldg:nrel00000643,
+        bldg:nrel00000812,
+        bldg:nrel00001065,
+        bldg:nrel00001082 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
+
+bldg:nrel00000365 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000365" ;
+    s223:cnx bldg:nrel00000001,
+        bldg:nrel00000459 ;
+    s223:contains bldg:nrel00000580,
+        bldg:nrel00000630,
+        bldg:nrel00001174 ;
+    s223:hasConnectionPoint bldg:nrel00000001,
+        bldg:nrel00000459 ;
+    s223:hasProperty bldg:nrel00000157,
+        bldg:nrel00000425,
+        bldg:nrel00000672,
+        bldg:nrel00001109,
+        bldg:nrel00001314 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
+
+bldg:nrel00000429 a s223:Filter ;
+    rdfs:label "nrel00000429" ;
+    s223:cnx bldg:nrel00000158,
+        bldg:nrel00000940 ;
+    s223:hasConnectionPoint bldg:nrel00000158,
+        bldg:nrel00000940 ;
+    s223:hasProperty bldg:nrel00000250 .
+
+bldg:nrel00000435 a s223:TerminalUnit ;
+    rdfs:label "nrel00000435" ;
+    s223:cnx bldg:nrel00000462,
+        bldg:nrel00000948 ;
+    s223:contains bldg:nrel00000110,
+        bldg:nrel00000142,
+        bldg:nrel00000460,
+        bldg:nrel00000849,
+        bldg:nrel00000917 ;
+    s223:hasConnectionPoint bldg:nrel00000462,
+        bldg:nrel00000948 ;
+    s223:hasProperty bldg:nrel00000048,
+        bldg:nrel00000124,
+        bldg:nrel00000641 .
+
+bldg:nrel00000628 a s223:Valve ;
+    rdfs:label "nrel00000628" ;
+    s223:cnx bldg:nrel00000677,
+        bldg:nrel00001262 ;
+    s223:hasConnectionPoint bldg:nrel00000677,
+        bldg:nrel00001262 ;
+    s223:hasProperty bldg:nrel00000632,
+        bldg:nrel00000716 .
+
+bldg:nrel00000755 a s223:Valve ;
+    rdfs:label "nrel00000755" ;
+    s223:cnx bldg:nrel00000380,
+        bldg:nrel00000491 ;
+    s223:hasConnectionPoint bldg:nrel00000380,
+        bldg:nrel00000491 ;
+    s223:hasProperty bldg:nrel00000473,
+        bldg:nrel00000883 .
+
+bldg:nrel00000789 a s223:FanCoilUnit ;
+    rdfs:label "nrel00000789" ;
+    s223:cnx bldg:nrel00001025,
+        bldg:nrel00001301 ;
+    s223:contains bldg:nrel00000361,
+        bldg:nrel00000381,
+        bldg:nrel00000770 ;
+    s223:hasConnectionPoint bldg:nrel00001025,
+        bldg:nrel00001301 ;
+    s223:hasProperty bldg:nrel00000442,
+        bldg:nrel00000481,
+        bldg:nrel00000918,
+        bldg:nrel00001238,
+        bldg:nrel00001324 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
+
+bldg:nrel00000815 a s223:Valve ;
+    rdfs:label "nrel00000815" ;
+    s223:cnx bldg:nrel00001033,
+        bldg:nrel00001229 ;
+    s223:hasConnectionPoint bldg:nrel00001033,
+        bldg:nrel00001229 ;
+    s223:hasProperty bldg:nrel00000762,
+        bldg:nrel00001041 .
+
+bldg:nrel00000958 a s223:TerminalUnit ;
+    rdfs:label "nrel00000958" ;
+    s223:cnx bldg:nrel00000208,
+        bldg:nrel00000354 ;
+    s223:contains bldg:nrel00000152,
+        bldg:nrel00000521,
+        bldg:nrel00000591,
+        bldg:nrel00000628,
+        bldg:nrel00001155 ;
+    s223:hasConnectionPoint bldg:nrel00000208,
+        bldg:nrel00000354 ;
+    s223:hasProperty bldg:nrel00000139,
+        bldg:nrel00000823,
+        bldg:nrel00000985 .
 
 bldg:nrel00000961 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000961" ;
@@ -12318,36 +12765,6 @@ bldg:nrel00000967 a s223:OutletConnectionPoint ;
         bldg:nrel00001221 ;
     s223:isConnectionPointOf bldg:nrel00001254 .
 
-bldg:nrel00000995 a s223:Duct ;
-    rdfs:label "nrel00000995" ;
-    s223:cnx bldg:nrel00000131,
-        bldg:nrel00001259 ;
-    s223:connectsAt bldg:nrel00000131,
-        bldg:nrel00001259 ;
-    s223:connectsFrom bldg:nrel00000209 ;
-    s223:connectsTo bldg:nrel00001125 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000998 a s223:Duct ;
-    rdfs:label "nrel00000998" ;
-    s223:cnx bldg:nrel00000465,
-        bldg:nrel00000786 ;
-    s223:connectsAt bldg:nrel00000465,
-        bldg:nrel00000786 ;
-    s223:connectsFrom bldg:nrel00001223 ;
-    s223:connectsTo bldg:nrel00001232 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00001021 a s223:Duct ;
-    rdfs:label "nrel00001021" ;
-    s223:cnx bldg:nrel00000186,
-        bldg:nrel00001301 ;
-    s223:connectsAt bldg:nrel00000186,
-        bldg:nrel00001301 ;
-    s223:connectsFrom bldg:nrel00000789 ;
-    s223:connectsTo bldg:nrel00001267 ;
-    s223:hasMedium s223:Medium-Air .
-
 bldg:nrel00001023 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001023" ;
     s223:cnx bldg:nrel00000960 ;
@@ -12357,75 +12774,68 @@ bldg:nrel00001023 a s223:OutletConnectionPoint ;
         bldg:nrel00001138 ;
     s223:isConnectionPointOf bldg:nrel00000960 .
 
-bldg:nrel00001024 a s223:Duct ;
-    rdfs:label "nrel00001024" ;
-    s223:cnx bldg:nrel00000208,
-        bldg:nrel00000947 ;
-    s223:connectsAt bldg:nrel00000208,
-        bldg:nrel00000947 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000958 ;
+bldg:nrel00001096 a s223:Junction ;
+    rdfs:label "nrel00001096" ;
+    s223:cnx bldg:nrel00000265,
+        bldg:nrel00000876,
+        bldg:nrel00001135 ;
+    s223:hasConnectionPoint bldg:nrel00000265,
+        bldg:nrel00000876,
+        bldg:nrel00001135 ;
     s223:hasMedium s223:Medium-Air .
 
-bldg:nrel00001101 a s223:Duct ;
-    rdfs:label "nrel00001101" ;
-    s223:cnx bldg:nrel00000806,
-        bldg:nrel00000864 ;
-    s223:connectsAt bldg:nrel00000806,
-        bldg:nrel00000864 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00001185 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00001143 a s223:Duct ;
-    rdfs:label "nrel00001143" ;
-    s223:cnx bldg:nrel00000512,
-        bldg:nrel00001193 ;
-    s223:connectsAt bldg:nrel00000512,
-        bldg:nrel00001193 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000233 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00001186 a s223:Duct ;
-    rdfs:label "nrel00001186" ;
-    s223:cnx bldg:nrel00000074,
-        bldg:nrel00001208 ;
-    s223:connectsAt bldg:nrel00000074,
-        bldg:nrel00001208 ;
-    s223:connectsFrom bldg:nrel00000233 ;
-    s223:connectsTo bldg:nrel00000122 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00001198 a s223:Duct ;
-    rdfs:label "nrel00001198" ;
-    s223:cnx bldg:nrel00000461,
-        bldg:nrel00001166 ;
-    s223:connectsAt bldg:nrel00000461,
-        bldg:nrel00001166 ;
-    s223:connectsFrom bldg:nrel00000447 ;
-    s223:connectsTo bldg:nrel00000053 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00001211 a s223:Duct ;
-    rdfs:label "nrel00001211" ;
+bldg:nrel00001119 a s223:Fan ;
+    rdfs:label "nrel00001119" ;
     s223:cnx bldg:nrel00000406,
-        bldg:nrel00000574 ;
-    s223:connectsAt bldg:nrel00000406,
-        bldg:nrel00000574 ;
-    s223:connectsFrom bldg:nrel00000675 ;
-    s223:connectsTo bldg:nrel00001119 ;
-    s223:hasMedium s223:Medium-Air .
+        bldg:nrel00001077 ;
+    s223:contains bldg:nrel00000703,
+        bldg:nrel00001078 ;
+    s223:hasConnectionPoint bldg:nrel00000406,
+        bldg:nrel00001077 ;
+    s223:hasProperty bldg:nrel00000072,
+        bldg:nrel00000116,
+        bldg:nrel00000126,
+        bldg:nrel00000164,
+        bldg:nrel00000272,
+        bldg:nrel00000401,
+        bldg:nrel00000558,
+        bldg:nrel00000616,
+        bldg:nrel00000670,
+        bldg:nrel00000935,
+        bldg:nrel00001127 .
 
-bldg:nrel00001219 a s223:Duct ;
-    rdfs:label "nrel00001219" ;
-    s223:cnx bldg:nrel00000462,
-        bldg:nrel00000924 ;
-    s223:connectsAt bldg:nrel00000462,
-        bldg:nrel00000924 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00000435 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00001185 a s223:TerminalUnit ;
+    rdfs:label "nrel00001185" ;
+    s223:cnx bldg:nrel00000207,
+        bldg:nrel00000864 ;
+    s223:contains bldg:nrel00000414,
+        bldg:nrel00000533,
+        bldg:nrel00000667,
+        bldg:nrel00000755,
+        bldg:nrel00001329 ;
+    s223:hasConnectionPoint bldg:nrel00000207,
+        bldg:nrel00000864 ;
+    s223:hasProperty bldg:nrel00000443,
+        bldg:nrel00000709,
+        bldg:nrel00001163 .
+
+bldg:nrel00001223 a s223:Valve ;
+    rdfs:label "nrel00001223" ;
+    s223:cnx bldg:nrel00000786,
+        bldg:nrel00001149 ;
+    s223:hasConnectionPoint bldg:nrel00000786,
+        bldg:nrel00001149 ;
+    s223:hasProperty bldg:nrel00000363,
+        bldg:nrel00000489 .
+
+bldg:nrel00001231 a s223:Valve ;
+    rdfs:label "nrel00001231" ;
+    s223:cnx bldg:nrel00000366,
+        bldg:nrel00000655 ;
+    s223:hasConnectionPoint bldg:nrel00000366,
+        bldg:nrel00000655 ;
+    s223:hasProperty bldg:nrel00000695,
+        bldg:nrel00001271 .
 
 bldg:nrel00001265 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001265" ;
@@ -12436,35 +12846,57 @@ bldg:nrel00001265 a s223:OutletConnectionPoint ;
         bldg:nrel00000809 ;
     s223:isConnectionPointOf bldg:nrel00000095 .
 
-bldg:nrel00001277 a s223:Duct ;
-    rdfs:label "nrel00001277" ;
-    s223:cnx bldg:nrel00001080,
-        bldg:nrel00001123 ;
-    s223:connectsAt bldg:nrel00001080,
-        bldg:nrel00001123 ;
-    s223:connectsFrom bldg:nrel00001305 ;
-    s223:connectsTo bldg:nrel00001297 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00001276 a s223:FanCoilUnit ;
+    rdfs:label "nrel00001276" ;
+    s223:cnx bldg:nrel00000100,
+        bldg:nrel00000873 ;
+    s223:contains bldg:nrel00000757,
+        bldg:nrel00000777,
+        bldg:nrel00001142 ;
+    s223:hasConnectionPoint bldg:nrel00000100,
+        bldg:nrel00000873 ;
+    s223:hasProperty bldg:nrel00000141,
+        bldg:nrel00000382,
+        bldg:nrel00000711,
+        bldg:nrel00000765,
+        bldg:nrel00000959 ;
+    s223:hasRole s223:Role-Cooling,
+        s223:Role-Heating .
 
-bldg:nrel00001278 a s223:Duct ;
-    rdfs:label "nrel00001278" ;
-    s223:cnx bldg:nrel00001260,
-        bldg:nrel00001311 ;
-    s223:connectsAt bldg:nrel00001260,
-        bldg:nrel00001311 ;
-    s223:connectsFrom bldg:nrel00000235 ;
-    s223:connectsTo bldg:nrel00000058 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00001297 a s223:TerminalUnit ;
+    rdfs:label "nrel00001297" ;
+    s223:cnx bldg:nrel00001123,
+        bldg:nrel00001194 ;
+    s223:contains bldg:nrel00000084,
+        bldg:nrel00000230,
+        bldg:nrel00000693,
+        bldg:nrel00000815,
+        bldg:nrel00000881 ;
+    s223:hasConnectionPoint bldg:nrel00001123,
+        bldg:nrel00001194 ;
+    s223:hasProperty bldg:nrel00000373,
+        bldg:nrel00000544,
+        bldg:nrel00001022 .
 
-bldg:nrel00001325 a s223:Duct ;
-    rdfs:label "nrel00001325" ;
-    s223:cnx bldg:nrel00000724,
-        bldg:nrel00000802 ;
-    s223:connectsAt bldg:nrel00000724,
-        bldg:nrel00000802 ;
-    s223:connectsFrom bldg:nrel00001113 ;
-    s223:connectsTo bldg:nrel00000262 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00001308 a s223:Fan ;
+    rdfs:label "nrel00001308" ;
+    s223:cnx bldg:nrel00000970,
+        bldg:nrel00001207 ;
+    s223:contains bldg:nrel00000291,
+        bldg:nrel00000496 ;
+    s223:hasConnectionPoint bldg:nrel00000970,
+        bldg:nrel00001207 ;
+    s223:hasProperty bldg:nrel00000283,
+        bldg:nrel00000651,
+        bldg:nrel00000661,
+        bldg:nrel00000674,
+        bldg:nrel00000811,
+        bldg:nrel00000963,
+        bldg:nrel00001016,
+        bldg:nrel00001132,
+        bldg:nrel00001272,
+        bldg:nrel00001273,
+        bldg:nrel00001331 .
 
 s223:EnumerationKind-Numerical a s223:Class,
         s223:EnumerationKind-Numerical,
@@ -12513,83 +12945,56 @@ s223:contains a rdf:Property ;
     rdfs:label "contains" ;
     rdfs:comment "The relation contains associates a PhysicalSpace or a piece of Equipment to a PhysicalSpace or another piece of Equipment, respectively." .
 
-bldg:nrel00000746 a s223:EAU,
-        s223:Equipment ;
-    rdfs:label "nrel00000746" ;
-    s223:cnx bldg:nrel00000050,
-        bldg:nrel00000134 ;
-    s223:connected bldg:nrel00000058 ;
-    s223:connectedFrom bldg:nrel00000058 ;
-    s223:connectedThrough bldg:nrel00000549 ;
-    s223:contains bldg:nrel00000343,
-        bldg:nrel00000429,
-        bldg:nrel00000675,
-        bldg:nrel00000771,
-        bldg:nrel00001003,
-        bldg:nrel00001089,
-        bldg:nrel00001100,
-        bldg:nrel00001119 ;
-    s223:hasConnectionPoint bldg:nrel00000050,
-        bldg:nrel00000134 ;
-    s223:hasProperty bldg:nrel00000669,
-        bldg:nrel00000853 .
+bldg:nrel00000053 a s223:Fan ;
+    rdfs:label "nrel00000053" ;
+    s223:cnx bldg:nrel00000461,
+        bldg:nrel00000931 ;
+    s223:hasConnectionPoint bldg:nrel00000461,
+        bldg:nrel00000931 ;
+    s223:hasProperty bldg:nrel00000012,
+        bldg:nrel00000492,
+        bldg:nrel00000550,
+        bldg:nrel00000562,
+        bldg:nrel00000566,
+        bldg:nrel00000572,
+        bldg:nrel00000607,
+        bldg:nrel00000648,
+        bldg:nrel00000877,
+        bldg:nrel00001075,
+        bldg:nrel00001093 .
 
-bldg:nrel00000982 a s223:AirHandlingUnit ;
-    rdfs:label "nrel00000982" ;
-    s223:cnx bldg:nrel00000078,
-        bldg:nrel00000211 ;
-    s223:connected bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000149 ;
-    s223:connectedTo bldg:nrel00001305 ;
-    s223:contains bldg:nrel00000007,
-        bldg:nrel00000053,
-        bldg:nrel00000061,
-        bldg:nrel00000254,
-        bldg:nrel00000446,
-        bldg:nrel00000447,
-        bldg:nrel00000683,
-        bldg:nrel00000992,
-        bldg:nrel00001087 ;
-    s223:hasConnectionPoint bldg:nrel00000078,
-        bldg:nrel00000211 ;
-    s223:hasProperty bldg:nrel00000034,
-        bldg:nrel00001070 .
+bldg:nrel00000446 a s223:Filter ;
+    rdfs:label "nrel00000446" ;
+    s223:cnx bldg:nrel00000255,
+        bldg:nrel00000892 ;
+    s223:hasConnectionPoint bldg:nrel00000255,
+        bldg:nrel00000892 ;
+    s223:hasProperty bldg:nrel00000564 .
 
-bldg:nrel00000110 a s223:Valve ;
-    rdfs:label "nrel00000110" ;
-    s223:cnx bldg:nrel00001036,
-        bldg:nrel00001302 ;
-    s223:connected bldg:nrel00000460 ;
-    s223:connectedThrough bldg:nrel00000813 ;
-    s223:connectedTo bldg:nrel00000460 ;
-    s223:hasConnectionPoint bldg:nrel00001036,
-        bldg:nrel00001302 ;
-    s223:hasProperty bldg:nrel00000634,
-        bldg:nrel00001137 .
+bldg:nrel00000675 a s223:Valve ;
+    rdfs:label "nrel00000675" ;
+    s223:cnx bldg:nrel00000574,
+        bldg:nrel00000691 ;
+    s223:hasConnectionPoint bldg:nrel00000574,
+        bldg:nrel00000691 ;
+    s223:hasProperty bldg:nrel00000347,
+        bldg:nrel00001153 .
 
-bldg:nrel00000192 a s223:Valve ;
-    rdfs:label "nrel00000192" ;
-    s223:cnx bldg:nrel00000971,
-        bldg:nrel00001169 ;
-    s223:connected bldg:nrel00001008 ;
-    s223:connectedThrough bldg:nrel00000426 ;
-    s223:connectedTo bldg:nrel00001008 ;
-    s223:hasConnectionPoint bldg:nrel00000971,
-        bldg:nrel00001169 ;
-    s223:hasProperty bldg:nrel00001060,
-        bldg:nrel00001327 .
+bldg:nrel00000771 a s223:Filter ;
+    rdfs:label "nrel00000771" ;
+    s223:cnx bldg:nrel00000307,
+        bldg:nrel00000699 ;
+    s223:hasConnectionPoint bldg:nrel00000307,
+        bldg:nrel00000699 ;
+    s223:hasProperty bldg:nrel00000154 .
 
-bldg:nrel00000205 a s223:Valve ;
-    rdfs:label "nrel00000205" ;
-    s223:cnx bldg:nrel00000025,
-        bldg:nrel00000076 ;
-    s223:connected bldg:nrel00000273 ;
-    s223:connectedThrough bldg:nrel00000759 ;
-    s223:connectedTo bldg:nrel00000273 ;
-    s223:hasConnectionPoint bldg:nrel00000025,
-        bldg:nrel00000076 ;
-    s223:hasProperty bldg:nrel00000194,
-        bldg:nrel00000299 .
+bldg:nrel00001087 a s223:Filter ;
+    rdfs:label "nrel00001087" ;
+    s223:cnx bldg:nrel00000107,
+        bldg:nrel00000908 ;
+    s223:hasConnectionPoint bldg:nrel00000107,
+        bldg:nrel00000908 ;
+    s223:hasProperty bldg:nrel00001213 .
 
 bldg:nrel00000207 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000207" ;
@@ -12602,30 +13007,6 @@ bldg:nrel00000207 a s223:OutletConnectionPoint ;
         bldg:nrel00001163 ;
     s223:isConnectionPointOf bldg:nrel00001185 .
 
-bldg:nrel00000254 a s223:Damper ;
-    rdfs:label "nrel00000254" ;
-    s223:cnx bldg:nrel00000424,
-        bldg:nrel00001274 ;
-    s223:connected bldg:nrel00000446 ;
-    s223:connectedThrough bldg:nrel00000077 ;
-    s223:connectedTo bldg:nrel00000446 ;
-    s223:hasConnectionPoint bldg:nrel00000424,
-        bldg:nrel00001274 ;
-    s223:hasProperty bldg:nrel00000288,
-        bldg:nrel00000617 .
-
-bldg:nrel00000312 a s223:Valve ;
-    rdfs:label "nrel00000312" ;
-    s223:cnx bldg:nrel00000869,
-        bldg:nrel00001228 ;
-    s223:connected bldg:nrel00000799 ;
-    s223:connectedThrough bldg:nrel00000911 ;
-    s223:connectedTo bldg:nrel00000799 ;
-    s223:hasConnectionPoint bldg:nrel00000869,
-        bldg:nrel00001228 ;
-    s223:hasProperty bldg:nrel00000047,
-        bldg:nrel00000196 .
-
 bldg:nrel00000354 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000354" ;
     s223:cnx bldg:nrel00000615,
@@ -12636,17 +13017,6 @@ bldg:nrel00000354 a s223:OutletConnectionPoint ;
         bldg:nrel00000823,
         bldg:nrel00000985 ;
     s223:isConnectionPointOf bldg:nrel00000958 .
-
-bldg:nrel00000429 a s223:Filter ;
-    rdfs:label "nrel00000429" ;
-    s223:cnx bldg:nrel00000158,
-        bldg:nrel00000940 ;
-    s223:connected bldg:nrel00001100 ;
-    s223:connectedThrough bldg:nrel00000891 ;
-    s223:connectedTo bldg:nrel00001100 ;
-    s223:hasConnectionPoint bldg:nrel00000158,
-        bldg:nrel00000940 ;
-    s223:hasProperty bldg:nrel00000250 .
 
 bldg:nrel00000441 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000441" ;
@@ -12659,41 +13029,17 @@ bldg:nrel00000441 a s223:OutletConnectionPoint ;
         bldg:nrel00000758 ;
     s223:isConnectionPointOf bldg:nrel00000187 .
 
-bldg:nrel00000628 a s223:Valve ;
-    rdfs:label "nrel00000628" ;
-    s223:cnx bldg:nrel00000677,
-        bldg:nrel00001262 ;
-    s223:connected bldg:nrel00000591 ;
-    s223:connectedThrough bldg:nrel00000328 ;
-    s223:connectedTo bldg:nrel00000591 ;
-    s223:hasConnectionPoint bldg:nrel00000677,
-        bldg:nrel00001262 ;
-    s223:hasProperty bldg:nrel00000632,
-        bldg:nrel00000716 .
-
-bldg:nrel00000755 a s223:Valve ;
-    rdfs:label "nrel00000755" ;
-    s223:cnx bldg:nrel00000380,
-        bldg:nrel00000491 ;
-    s223:connected bldg:nrel00000533 ;
-    s223:connectedThrough bldg:nrel00000130 ;
-    s223:connectedTo bldg:nrel00000533 ;
-    s223:hasConnectionPoint bldg:nrel00000380,
-        bldg:nrel00000491 ;
-    s223:hasProperty bldg:nrel00000473,
-        bldg:nrel00000883 .
-
-bldg:nrel00000815 a s223:Valve ;
-    rdfs:label "nrel00000815" ;
-    s223:cnx bldg:nrel00001033,
-        bldg:nrel00001229 ;
-    s223:connected bldg:nrel00000084 ;
-    s223:connectedThrough bldg:nrel00000605 ;
-    s223:connectedTo bldg:nrel00000084 ;
-    s223:hasConnectionPoint bldg:nrel00001033,
-        bldg:nrel00001229 ;
-    s223:hasProperty bldg:nrel00000762,
-        bldg:nrel00001041 .
+bldg:nrel00000907 a s223:Duct ;
+    rdfs:label "nrel00000907" ;
+    s223:cnx bldg:nrel00000043,
+        bldg:nrel00000790,
+        bldg:nrel00001182,
+        bldg:nrel00001242 ;
+    s223:connectsAt bldg:nrel00000043,
+        bldg:nrel00000790,
+        bldg:nrel00001182,
+        bldg:nrel00001242 ;
+    s223:hasMedium s223:Medium-Air .
 
 bldg:nrel00000948 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00000948" ;
@@ -12706,29 +13052,6 @@ bldg:nrel00000948 a s223:OutletConnectionPoint ;
         bldg:nrel00000641 ;
     s223:isConnectionPointOf bldg:nrel00000435 .
 
-bldg:nrel00001119 a s223:Fan ;
-    rdfs:label "nrel00001119" ;
-    s223:cnx bldg:nrel00000406,
-        bldg:nrel00001077 ;
-    s223:connected bldg:nrel00000675 ;
-    s223:connectedFrom bldg:nrel00000675 ;
-    s223:connectedThrough bldg:nrel00001211 ;
-    s223:contains bldg:nrel00000703,
-        bldg:nrel00001078 ;
-    s223:hasConnectionPoint bldg:nrel00000406,
-        bldg:nrel00001077 ;
-    s223:hasProperty bldg:nrel00000072,
-        bldg:nrel00000116,
-        bldg:nrel00000126,
-        bldg:nrel00000164,
-        bldg:nrel00000272,
-        bldg:nrel00000401,
-        bldg:nrel00000558,
-        bldg:nrel00000616,
-        bldg:nrel00000670,
-        bldg:nrel00000935,
-        bldg:nrel00001127 .
-
 bldg:nrel00001194 a s223:OutletConnectionPoint ;
     rdfs:label "nrel00001194" ;
     s223:cnx bldg:nrel00000088,
@@ -12739,30 +13062,6 @@ bldg:nrel00001194 a s223:OutletConnectionPoint ;
         bldg:nrel00000544,
         bldg:nrel00001022 ;
     s223:isConnectionPointOf bldg:nrel00001297 .
-
-bldg:nrel00001223 a s223:Valve ;
-    rdfs:label "nrel00001223" ;
-    s223:cnx bldg:nrel00000786,
-        bldg:nrel00001149 ;
-    s223:connected bldg:nrel00001232 ;
-    s223:connectedThrough bldg:nrel00000998 ;
-    s223:connectedTo bldg:nrel00001232 ;
-    s223:hasConnectionPoint bldg:nrel00000786,
-        bldg:nrel00001149 ;
-    s223:hasProperty bldg:nrel00000363,
-        bldg:nrel00000489 .
-
-bldg:nrel00001231 a s223:Valve ;
-    rdfs:label "nrel00001231" ;
-    s223:cnx bldg:nrel00000366,
-        bldg:nrel00000655 ;
-    s223:connected bldg:nrel00000782 ;
-    s223:connectedThrough bldg:nrel00000022 ;
-    s223:connectedTo bldg:nrel00000782 ;
-    s223:hasConnectionPoint bldg:nrel00000366,
-        bldg:nrel00000655 ;
-    s223:hasProperty bldg:nrel00000695,
-        bldg:nrel00001271 .
 
 s223:Aspect-ElectricalVoltagePhases a s223:Aspect-ElectricalVoltagePhases,
         s223:Class,
@@ -13003,6 +13302,26 @@ bldg:nrel00000035 a s223:CoolingCoil ;
         bldg:nrel00000994 ;
     s223:hasRole s223:Role-Cooling .
 
+bldg:nrel00000080 a s223:DomainSpace ;
+    rdfs:label "nrel00000080" ;
+    s223:cnx bldg:nrel00000220,
+        bldg:nrel00001105 ;
+    s223:hasConnectionPoint bldg:nrel00000220,
+        bldg:nrel00001105 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000005,
+        bldg:nrel00000319 .
+
+bldg:nrel00000122 a s223:DomainSpace ;
+    rdfs:label "nrel00000122" ;
+    s223:cnx bldg:nrel00000074,
+        bldg:nrel00000781 ;
+    s223:hasConnectionPoint bldg:nrel00000074,
+        bldg:nrel00000781 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000335,
+        bldg:nrel00001167 .
+
 bldg:nrel00000135 a s223:HeatingCoil ;
     rdfs:label "nrel00000135" ;
     s223:cnx bldg:nrel00000051,
@@ -13109,6 +13428,26 @@ bldg:nrel00000580 a s223:HeatingCoil ;
         bldg:nrel00001307 ;
     s223:hasRole s223:Role-Heating .
 
+bldg:nrel00000587 a s223:DomainSpace ;
+    rdfs:label "nrel00000587" ;
+    s223:cnx bldg:nrel00000745,
+        bldg:nrel00000986 ;
+    s223:hasConnectionPoint bldg:nrel00000745,
+        bldg:nrel00000986 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000433,
+        bldg:nrel00000844 .
+
+bldg:nrel00000600 a s223:DomainSpace ;
+    rdfs:label "nrel00000600" ;
+    s223:cnx bldg:nrel00000439,
+        bldg:nrel00001049 ;
+    s223:hasConnectionPoint bldg:nrel00000439,
+        bldg:nrel00001049 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000847,
+        bldg:nrel00001059 .
+
 bldg:nrel00000630 a s223:CoolingCoil ;
     rdfs:label "nrel00000630" ;
     s223:cnx bldg:nrel00000353,
@@ -13127,6 +13466,26 @@ bldg:nrel00000630 a s223:CoolingCoil ;
         bldg:nrel00000993,
         bldg:nrel00001145 ;
     s223:hasRole s223:Role-Cooling .
+
+bldg:nrel00000631 a s223:DomainSpace ;
+    rdfs:label "nrel00000631" ;
+    s223:cnx bldg:nrel00000138,
+        bldg:nrel00001200 ;
+    s223:hasConnectionPoint bldg:nrel00000138,
+        bldg:nrel00001200 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000665,
+        bldg:nrel00001085 .
+
+bldg:nrel00000736 a s223:DomainSpace ;
+    rdfs:label "nrel00000736" ;
+    s223:cnx bldg:nrel00000045,
+        bldg:nrel00000162 ;
+    s223:hasConnectionPoint bldg:nrel00000045,
+        bldg:nrel00000162 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00001014,
+        bldg:nrel00001295 .
 
 bldg:nrel00000757 a s223:CoolingCoil ;
     rdfs:label "nrel00000757" ;
@@ -13166,6 +13525,16 @@ bldg:nrel00000780 a s223:CoolingCoil ;
         bldg:nrel00001001 ;
     s223:hasRole s223:Role-Cooling .
 
+bldg:nrel00000818 a s223:DomainSpace ;
+    rdfs:label "nrel00000818" ;
+    s223:cnx bldg:nrel00000221,
+        bldg:nrel00001086 ;
+    s223:hasConnectionPoint bldg:nrel00000221,
+        bldg:nrel00001086 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000739,
+        bldg:nrel00001130 .
+
 bldg:nrel00000839 a s223:CoolingCoil ;
     rdfs:label "nrel00000839" ;
     s223:cnx bldg:nrel00000356,
@@ -13204,6 +13573,16 @@ bldg:nrel00000848 a s223:CoolingCoil ;
         bldg:nrel00001287 ;
     s223:hasRole s223:Role-Cooling .
 
+bldg:nrel00000862 a s223:DomainSpace ;
+    rdfs:label "nrel00000862" ;
+    s223:cnx bldg:nrel00000219,
+        bldg:nrel00000792 ;
+    s223:hasConnectionPoint bldg:nrel00000219,
+        bldg:nrel00000792 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000417,
+        bldg:nrel00001134 .
+
 bldg:nrel00000904 a s223:CoolingCoil ;
     rdfs:label "nrel00000904" ;
     s223:cnx bldg:nrel00000248,
@@ -13223,19 +13602,35 @@ bldg:nrel00000904 a s223:CoolingCoil ;
         bldg:nrel00001317 ;
     s223:hasRole s223:Role-Cooling .
 
-bldg:nrel00000907 a s223:Duct ;
-    rdfs:label "nrel00000907" ;
-    s223:cnx bldg:nrel00000043,
-        bldg:nrel00000790,
-        bldg:nrel00001182,
-        bldg:nrel00001242 ;
-    s223:connectsAt bldg:nrel00000043,
-        bldg:nrel00000790,
-        bldg:nrel00001182,
-        bldg:nrel00001242 ;
-    s223:connectsFrom bldg:nrel00001113 ;
-    s223:connectsTo bldg:nrel00001113 ;
-    s223:hasMedium s223:Medium-Air .
+bldg:nrel00000939 a s223:DomainSpace ;
+    rdfs:label "nrel00000939" ;
+    s223:cnx bldg:nrel00000281,
+        bldg:nrel00000474 ;
+    s223:hasConnectionPoint bldg:nrel00000281,
+        bldg:nrel00000474 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000308,
+        bldg:nrel00001090 .
+
+bldg:nrel00000941 a s223:DomainSpace ;
+    rdfs:label "nrel00000941" ;
+    s223:cnx bldg:nrel00000251,
+        bldg:nrel00000846 ;
+    s223:hasConnectionPoint bldg:nrel00000251,
+        bldg:nrel00000846 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000404,
+        bldg:nrel00000681 .
+
+bldg:nrel00001125 a s223:DomainSpace ;
+    rdfs:label "nrel00001125" ;
+    s223:cnx bldg:nrel00001064,
+        bldg:nrel00001259 ;
+    s223:hasConnectionPoint bldg:nrel00001064,
+        bldg:nrel00001259 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000002,
+        bldg:nrel00001280 .
 
 bldg:nrel00001142 a s223:HeatingCoil ;
     rdfs:label "nrel00001142" ;
@@ -13287,6 +13682,16 @@ bldg:nrel00001187 a s223:HeatingCoil ;
     s223:hasProperty bldg:nrel00000263,
         bldg:nrel00000915 ;
     s223:hasRole s223:Role-Heating .
+
+bldg:nrel00001197 a s223:DomainSpace ;
+    rdfs:label "nrel00001197" ;
+    s223:cnx bldg:nrel00000466,
+        bldg:nrel00000590 ;
+    s223:hasConnectionPoint bldg:nrel00000466,
+        bldg:nrel00000590 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000499,
+        bldg:nrel00001306 .
 
 bldg:nrel00001291 a s223:HeatingCoil ;
     rdfs:label "nrel00001291" ;
@@ -13357,369 +13762,176 @@ s223:LineLineVoltage-240V a s223:Class,
     rdfs:comment "240V Line-Line Voltage" ;
     rdfs:subClassOf s223:Numerical-LineLineVoltage .
 
-bldg:nrel00000038 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000038" ;
-    s223:cnx bldg:nrel00000420,
-        bldg:nrel00001270 ;
-    s223:connected bldg:nrel00000080,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000480,
-        bldg:nrel00000731 ;
-    s223:connectedTo bldg:nrel00000080 ;
-    s223:contains bldg:nrel00000495,
-        bldg:nrel00000780,
-        bldg:nrel00001187 ;
-    s223:hasConnectionPoint bldg:nrel00000420,
-        bldg:nrel00001270 ;
-    s223:hasProperty bldg:nrel00000173,
-        bldg:nrel00000212,
-        bldg:nrel00000228,
-        bldg:nrel00000329,
-        bldg:nrel00000884 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00000084 a s223:HeatingCoil ;
+    rdfs:label "nrel00000084" ;
+    s223:cnx bldg:nrel00000151,
+        bldg:nrel00000167,
+        bldg:nrel00000432,
+        bldg:nrel00000991 ;
+    s223:contains bldg:nrel00000133,
+        bldg:nrel00000593,
+        bldg:nrel00000772 ;
+    s223:hasConnectionPoint bldg:nrel00000151,
+        bldg:nrel00000167,
+        bldg:nrel00000432,
+        bldg:nrel00000991 ;
+    s223:hasProperty bldg:nrel00000978,
+        bldg:nrel00001235 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000187 a s223:TerminalUnit ;
-    rdfs:label "nrel00000187" ;
-    s223:cnx bldg:nrel00000441,
-        bldg:nrel00001047 ;
-    s223:connected bldg:nrel00001197,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000725,
-        bldg:nrel00000768 ;
-    s223:connectedTo bldg:nrel00001197 ;
-    s223:contains bldg:nrel00000205,
-        bldg:nrel00000273,
-        bldg:nrel00000369,
-        bldg:nrel00000925,
-        bldg:nrel00001315 ;
-    s223:hasConnectionPoint bldg:nrel00000441,
-        bldg:nrel00001047 ;
-    s223:hasProperty bldg:nrel00000118,
-        bldg:nrel00000132,
-        bldg:nrel00000758 .
+bldg:nrel00000273 a s223:HeatingCoil ;
+    rdfs:label "nrel00000273" ;
+    s223:cnx bldg:nrel00000040,
+        bldg:nrel00000638,
+        bldg:nrel00000720,
+        bldg:nrel00001069 ;
+    s223:contains bldg:nrel00000214,
+        bldg:nrel00000293,
+        bldg:nrel00000920 ;
+    s223:hasConnectionPoint bldg:nrel00000040,
+        bldg:nrel00000638,
+        bldg:nrel00000720,
+        bldg:nrel00001069 ;
+    s223:hasProperty bldg:nrel00000412,
+        bldg:nrel00000419 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000209 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000209" ;
-    s223:cnx bldg:nrel00000131,
-        bldg:nrel00000355 ;
-    s223:connected bldg:nrel00001125,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000822,
-        bldg:nrel00000995 ;
-    s223:connectedTo bldg:nrel00001125 ;
-    s223:contains bldg:nrel00000099,
-        bldg:nrel00000135,
-        bldg:nrel00000904 ;
-    s223:hasConnectionPoint bldg:nrel00000131,
-        bldg:nrel00000355 ;
-    s223:hasProperty bldg:nrel00000392,
-        bldg:nrel00000752,
-        bldg:nrel00000805,
-        bldg:nrel00001160,
-        bldg:nrel00001233 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00000460 a s223:HeatingCoil ;
+    rdfs:label "nrel00000460" ;
+    s223:cnx bldg:nrel00000065,
+        bldg:nrel00001050,
+        bldg:nrel00001072,
+        bldg:nrel00001107 ;
+    s223:contains bldg:nrel00000300,
+        bldg:nrel00000817,
+        bldg:nrel00001162 ;
+    s223:hasConnectionPoint bldg:nrel00000065,
+        bldg:nrel00001050,
+        bldg:nrel00001072,
+        bldg:nrel00001107 ;
+    s223:hasProperty bldg:nrel00000518,
+        bldg:nrel00000684 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000233 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000233" ;
-    s223:cnx bldg:nrel00000512,
-        bldg:nrel00001208 ;
-    s223:connected bldg:nrel00000122,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00001143,
-        bldg:nrel00001186 ;
-    s223:connectedTo bldg:nrel00000122 ;
-    s223:contains bldg:nrel00000226,
-        bldg:nrel00000568,
-        bldg:nrel00001291 ;
-    s223:hasConnectionPoint bldg:nrel00000512,
-        bldg:nrel00001208 ;
-    s223:hasProperty bldg:nrel00000115,
-        bldg:nrel00000348,
-        bldg:nrel00000451,
-        bldg:nrel00001002,
-        bldg:nrel00001212 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00000533 a s223:HeatingCoil ;
+    rdfs:label "nrel00000533" ;
+    s223:cnx bldg:nrel00000485,
+        bldg:nrel00000579,
+        bldg:nrel00001285,
+        bldg:nrel00001299 ;
+    s223:contains bldg:nrel00000188,
+        bldg:nrel00000418,
+        bldg:nrel00001012 ;
+    s223:hasConnectionPoint bldg:nrel00000485,
+        bldg:nrel00000579,
+        bldg:nrel00001285,
+        bldg:nrel00001299 ;
+    s223:hasProperty bldg:nrel00000166,
+        bldg:nrel00000457 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000235 a s223:Fan ;
-    rdfs:label "nrel00000235" ;
-    s223:cnx bldg:nrel00001161,
-        bldg:nrel00001311 ;
-    s223:connected bldg:nrel00000058,
-        bldg:nrel00000966 ;
-    s223:connectedFrom bldg:nrel00000966 ;
-    s223:connectedThrough bldg:nrel00000285,
-        bldg:nrel00001278 ;
-    s223:connectedTo bldg:nrel00000058 ;
-    s223:contains bldg:nrel00000413,
-        bldg:nrel00000887 ;
-    s223:hasConnectionPoint bldg:nrel00001161,
-        bldg:nrel00001311 ;
-    s223:hasProperty bldg:nrel00000231,
-        bldg:nrel00000294,
-        bldg:nrel00000575,
-        bldg:nrel00000766,
-        bldg:nrel00000835,
-        bldg:nrel00000951,
-        bldg:nrel00001177,
-        bldg:nrel00001202,
-        bldg:nrel00001216,
-        bldg:nrel00001281,
-        bldg:nrel00001332 .
+bldg:nrel00000591 a s223:HeatingCoil ;
+    rdfs:label "nrel00000591" ;
+    s223:cnx bldg:nrel00000200,
+        bldg:nrel00000306,
+        bldg:nrel00001136,
+        bldg:nrel00001226 ;
+    s223:contains bldg:nrel00000039,
+        bldg:nrel00000416,
+        bldg:nrel00000604 ;
+    s223:hasConnectionPoint bldg:nrel00000200,
+        bldg:nrel00000306,
+        bldg:nrel00001136,
+        bldg:nrel00001226 ;
+    s223:hasProperty bldg:nrel00000933,
+        bldg:nrel00001255 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000262 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000262" ;
-    s223:cnx bldg:nrel00000597,
-        bldg:nrel00000724 ;
-    s223:connected bldg:nrel00001113,
-        bldg:nrel00001267 ;
-    s223:connectedFrom bldg:nrel00001113 ;
-    s223:connectedThrough bldg:nrel00000905,
-        bldg:nrel00001325 ;
-    s223:connectedTo bldg:nrel00001267 ;
-    s223:contains bldg:nrel00000035,
-        bldg:nrel00000505,
-        bldg:nrel00000729 ;
-    s223:hasConnectionPoint bldg:nrel00000597,
-        bldg:nrel00000724 ;
-    s223:hasProperty bldg:nrel00000070,
-        bldg:nrel00000405,
-        bldg:nrel00000551,
-        bldg:nrel00000980,
-        bldg:nrel00001011 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00000683 a s223:HeatExchanger ;
+    rdfs:label "nrel00000683" ;
+    s223:cnx bldg:nrel00000183,
+        bldg:nrel00000189,
+        bldg:nrel00000271,
+        bldg:nrel00000923 ;
+    s223:contains bldg:nrel00000083,
+        bldg:nrel00000344,
+        bldg:nrel00000546 ;
+    s223:hasConnectionPoint bldg:nrel00000183,
+        bldg:nrel00000189,
+        bldg:nrel00000271,
+        bldg:nrel00000923 ;
+    s223:hasProperty bldg:nrel00000067,
+        bldg:nrel00000163,
+        bldg:nrel00001094 ;
+    s223:hasRole s223:Role-Evaporator .
 
-bldg:nrel00000280 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000280" ;
-    s223:cnx bldg:nrel00000278,
-        bldg:nrel00001157 ;
-    s223:connected bldg:nrel00000736,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000396,
-        bldg:nrel00000807 ;
-    s223:connectedTo bldg:nrel00000736 ;
-    s223:contains bldg:nrel00000003,
-        bldg:nrel00000055,
-        bldg:nrel00000848 ;
-    s223:hasConnectionPoint bldg:nrel00000278,
-        bldg:nrel00001157 ;
-    s223:hasProperty bldg:nrel00000988,
-        bldg:nrel00001152,
-        bldg:nrel00001204,
-        bldg:nrel00001244,
-        bldg:nrel00001282 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00000782 a s223:HeatingCoil ;
+    rdfs:label "nrel00000782" ;
+    s223:cnx bldg:nrel00000190,
+        bldg:nrel00000722,
+        bldg:nrel00001046,
+        bldg:nrel00001052 ;
+    s223:contains bldg:nrel00000148,
+        bldg:nrel00000647,
+        bldg:nrel00001037 ;
+    s223:hasConnectionPoint bldg:nrel00000190,
+        bldg:nrel00000722,
+        bldg:nrel00001046,
+        bldg:nrel00001052 ;
+    s223:hasProperty bldg:nrel00000820,
+        bldg:nrel00001067 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000362 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000362" ;
-    s223:cnx bldg:nrel00000714,
-        bldg:nrel00001020 ;
-    s223:connected bldg:nrel00000631,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000490,
-        bldg:nrel00000838 ;
-    s223:connectedTo bldg:nrel00000631 ;
-    s223:contains bldg:nrel00000830,
-        bldg:nrel00000839,
-        bldg:nrel00001176 ;
-    s223:hasConnectionPoint bldg:nrel00000714,
-        bldg:nrel00001020 ;
-    s223:hasProperty bldg:nrel00000527,
-        bldg:nrel00000643,
-        bldg:nrel00000812,
-        bldg:nrel00001065,
-        bldg:nrel00001082 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00000799 a s223:HeatingCoil ;
+    rdfs:label "nrel00000799" ;
+    s223:cnx bldg:nrel00000161,
+        bldg:nrel00001056,
+        bldg:nrel00001183,
+        bldg:nrel00001300 ;
+    s223:contains bldg:nrel00000217,
+        bldg:nrel00000613,
+        bldg:nrel00001292 ;
+    s223:hasConnectionPoint bldg:nrel00000161,
+        bldg:nrel00001056,
+        bldg:nrel00001183,
+        bldg:nrel00001300 ;
+    s223:hasProperty bldg:nrel00000147,
+        bldg:nrel00000565 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000365 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000365" ;
-    s223:cnx bldg:nrel00000001,
-        bldg:nrel00000459 ;
-    s223:connected bldg:nrel00000862,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000258,
-        bldg:nrel00000374 ;
-    s223:connectedTo bldg:nrel00000862 ;
-    s223:contains bldg:nrel00000580,
-        bldg:nrel00000630,
-        bldg:nrel00001174 ;
-    s223:hasConnectionPoint bldg:nrel00000001,
-        bldg:nrel00000459 ;
-    s223:hasProperty bldg:nrel00000157,
-        bldg:nrel00000425,
-        bldg:nrel00000672,
-        bldg:nrel00001109,
-        bldg:nrel00001314 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
+bldg:nrel00001008 a s223:HeatingCoil ;
+    rdfs:label "nrel00001008" ;
+    s223:cnx bldg:nrel00000017,
+        bldg:nrel00000305,
+        bldg:nrel00000797,
+        bldg:nrel00001144 ;
+    s223:contains bldg:nrel00000092,
+        bldg:nrel00000400,
+        bldg:nrel00000454 ;
+    s223:hasConnectionPoint bldg:nrel00000017,
+        bldg:nrel00000305,
+        bldg:nrel00000797,
+        bldg:nrel00001144 ;
+    s223:hasProperty bldg:nrel00000275,
+        bldg:nrel00000738 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000435 a s223:TerminalUnit ;
-    rdfs:label "nrel00000435" ;
-    s223:cnx bldg:nrel00000462,
-        bldg:nrel00000948 ;
-    s223:connected bldg:nrel00000941,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000502,
-        bldg:nrel00001219 ;
-    s223:connectedTo bldg:nrel00000941 ;
-    s223:contains bldg:nrel00000110,
-        bldg:nrel00000142,
-        bldg:nrel00000460,
-        bldg:nrel00000849,
-        bldg:nrel00000917 ;
-    s223:hasConnectionPoint bldg:nrel00000462,
-        bldg:nrel00000948 ;
-    s223:hasProperty bldg:nrel00000048,
-        bldg:nrel00000124,
-        bldg:nrel00000641 .
-
-bldg:nrel00000789 a s223:FanCoilUnit ;
-    rdfs:label "nrel00000789" ;
-    s223:cnx bldg:nrel00001025,
-        bldg:nrel00001301 ;
-    s223:connected bldg:nrel00001113,
-        bldg:nrel00001267 ;
-    s223:connectedFrom bldg:nrel00001113 ;
-    s223:connectedThrough bldg:nrel00000701,
-        bldg:nrel00001021 ;
-    s223:connectedTo bldg:nrel00001267 ;
-    s223:contains bldg:nrel00000361,
-        bldg:nrel00000381,
-        bldg:nrel00000770 ;
-    s223:hasConnectionPoint bldg:nrel00001025,
-        bldg:nrel00001301 ;
-    s223:hasProperty bldg:nrel00000442,
-        bldg:nrel00000481,
-        bldg:nrel00000918,
-        bldg:nrel00001238,
-        bldg:nrel00001324 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
-
-bldg:nrel00000958 a s223:TerminalUnit ;
-    rdfs:label "nrel00000958" ;
-    s223:cnx bldg:nrel00000208,
-        bldg:nrel00000354 ;
-    s223:connected bldg:nrel00000939,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000615,
-        bldg:nrel00001024 ;
-    s223:connectedTo bldg:nrel00000939 ;
-    s223:contains bldg:nrel00000152,
-        bldg:nrel00000521,
-        bldg:nrel00000591,
-        bldg:nrel00000628,
-        bldg:nrel00001155 ;
-    s223:hasConnectionPoint bldg:nrel00000208,
-        bldg:nrel00000354 ;
-    s223:hasProperty bldg:nrel00000139,
-        bldg:nrel00000823,
-        bldg:nrel00000985 .
-
-bldg:nrel00001185 a s223:TerminalUnit ;
-    rdfs:label "nrel00001185" ;
-    s223:cnx bldg:nrel00000207,
-        bldg:nrel00000864 ;
-    s223:connected bldg:nrel00000818,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000932,
-        bldg:nrel00001101 ;
-    s223:connectedTo bldg:nrel00000818 ;
-    s223:contains bldg:nrel00000414,
-        bldg:nrel00000533,
-        bldg:nrel00000667,
-        bldg:nrel00000755,
-        bldg:nrel00001329 ;
-    s223:hasConnectionPoint bldg:nrel00000207,
-        bldg:nrel00000864 ;
-    s223:hasProperty bldg:nrel00000443,
-        bldg:nrel00000709,
-        bldg:nrel00001163 .
-
-bldg:nrel00001276 a s223:FanCoilUnit ;
-    rdfs:label "nrel00001276" ;
-    s223:cnx bldg:nrel00000100,
-        bldg:nrel00000873 ;
-    s223:connected bldg:nrel00000600,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000346,
-        bldg:nrel00000902 ;
-    s223:connectedTo bldg:nrel00000600 ;
-    s223:contains bldg:nrel00000757,
-        bldg:nrel00000777,
-        bldg:nrel00001142 ;
-    s223:hasConnectionPoint bldg:nrel00000100,
-        bldg:nrel00000873 ;
-    s223:hasProperty bldg:nrel00000141,
-        bldg:nrel00000382,
-        bldg:nrel00000711,
-        bldg:nrel00000765,
-        bldg:nrel00000959 ;
-    s223:hasRole s223:Role-Cooling,
-        s223:Role-Heating .
-
-bldg:nrel00001297 a s223:TerminalUnit ;
-    rdfs:label "nrel00001297" ;
-    s223:cnx bldg:nrel00001123,
-        bldg:nrel00001194 ;
-    s223:connected bldg:nrel00000587,
-        bldg:nrel00001305 ;
-    s223:connectedFrom bldg:nrel00001305 ;
-    s223:connectedThrough bldg:nrel00000088,
-        bldg:nrel00001277 ;
-    s223:connectedTo bldg:nrel00000587 ;
-    s223:contains bldg:nrel00000084,
-        bldg:nrel00000230,
-        bldg:nrel00000693,
-        bldg:nrel00000815,
-        bldg:nrel00000881 ;
-    s223:hasConnectionPoint bldg:nrel00001123,
-        bldg:nrel00001194 ;
-    s223:hasProperty bldg:nrel00000373,
-        bldg:nrel00000544,
-        bldg:nrel00001022 .
-
-bldg:nrel00001308 a s223:Fan ;
-    rdfs:label "nrel00001308" ;
-    s223:cnx bldg:nrel00000970,
-        bldg:nrel00001207 ;
-    s223:connected bldg:nrel00000058,
-        bldg:nrel00000966 ;
-    s223:connectedFrom bldg:nrel00000966 ;
-    s223:connectedThrough bldg:nrel00000171,
-        bldg:nrel00000783 ;
-    s223:connectedTo bldg:nrel00000058 ;
-    s223:contains bldg:nrel00000291,
-        bldg:nrel00000496 ;
-    s223:hasConnectionPoint bldg:nrel00000970,
-        bldg:nrel00001207 ;
-    s223:hasProperty bldg:nrel00000283,
-        bldg:nrel00000651,
-        bldg:nrel00000661,
-        bldg:nrel00000674,
-        bldg:nrel00000811,
-        bldg:nrel00000963,
-        bldg:nrel00001016,
-        bldg:nrel00001132,
-        bldg:nrel00001272,
-        bldg:nrel00001273,
-        bldg:nrel00001331 .
+bldg:nrel00001232 a s223:HeatingCoil ;
+    rdfs:label "nrel00001232" ;
+    s223:cnx bldg:nrel00000000,
+        bldg:nrel00000032,
+        bldg:nrel00000465,
+        bldg:nrel00001284 ;
+    s223:contains bldg:nrel00000309,
+        bldg:nrel00000602,
+        bldg:nrel00001303 ;
+    s223:hasConnectionPoint bldg:nrel00000000,
+        bldg:nrel00000032,
+        bldg:nrel00000465,
+        bldg:nrel00001284 ;
+    s223:hasProperty bldg:nrel00000358,
+        bldg:nrel00001220 ;
+    s223:hasRole s223:Role-Heating .
 
 s223:EnumerationKind-FlowStatus a s223:Class,
         s223:EnumerationKind-FlowStatus,
@@ -13727,256 +13939,372 @@ s223:EnumerationKind-FlowStatus a s223:Class,
     rdfs:label "EnumerationKind FlowStatus" ;
     rdfs:subClassOf s223:EnumerationKind .
 
-bldg:nrel00000053 a s223:Fan ;
-    rdfs:label "nrel00000053" ;
-    s223:cnx bldg:nrel00000461,
-        bldg:nrel00000931 ;
-    s223:connected bldg:nrel00000007,
-        bldg:nrel00000447 ;
-    s223:connectedFrom bldg:nrel00000447 ;
-    s223:connectedThrough bldg:nrel00000678,
-        bldg:nrel00001198 ;
-    s223:connectedTo bldg:nrel00000007 ;
-    s223:hasConnectionPoint bldg:nrel00000461,
-        bldg:nrel00000931 ;
-    s223:hasProperty bldg:nrel00000012,
-        bldg:nrel00000492,
-        bldg:nrel00000550,
-        bldg:nrel00000562,
-        bldg:nrel00000566,
-        bldg:nrel00000572,
-        bldg:nrel00000607,
-        bldg:nrel00000648,
-        bldg:nrel00000877,
-        bldg:nrel00001075,
-        bldg:nrel00001093 .
+bldg:nrel00000007 a s223:HeatingCoil ;
+    rdfs:label "nrel00000007" ;
+    s223:cnx bldg:nrel00000430,
+        bldg:nrel00000715,
+        bldg:nrel00000903,
+        bldg:nrel00001256 ;
+    s223:contains bldg:nrel00000383,
+        bldg:nrel00000749,
+        bldg:nrel00001042 ;
+    s223:hasConnectionPoint bldg:nrel00000430,
+        bldg:nrel00000715,
+        bldg:nrel00000903,
+        bldg:nrel00001256 ;
+    s223:hasProperty bldg:nrel00000795,
+        bldg:nrel00000946 ;
+    s223:hasRole s223:Role-Heating .
 
-bldg:nrel00000080 a s223:DomainSpace ;
-    rdfs:label "nrel00000080" ;
-    s223:cnx bldg:nrel00000220,
-        bldg:nrel00001105 ;
-    s223:connected bldg:nrel00000038 ;
-    s223:connectedFrom bldg:nrel00000038 ;
-    s223:connectedThrough bldg:nrel00000480 ;
-    s223:hasConnectionPoint bldg:nrel00000220,
-        bldg:nrel00001105 ;
+bldg:nrel00000061 a s223:CoolingCoil ;
+    rdfs:label "nrel00000061" ;
+    s223:cnx bldg:nrel00000240,
+        bldg:nrel00000586,
+        bldg:nrel00000964,
+        bldg:nrel00001268 ;
+    s223:contains bldg:nrel00000062,
+        bldg:nrel00001199 ;
+    s223:hasConnectionPoint bldg:nrel00000240,
+        bldg:nrel00000586,
+        bldg:nrel00000964,
+        bldg:nrel00001268 ;
+    s223:hasProperty bldg:nrel00000498,
+        bldg:nrel00000529,
+        bldg:nrel00000718,
+        bldg:nrel00001158,
+        bldg:nrel00001261 ;
+    s223:hasRole s223:Role-Cooling .
+
+bldg:nrel00000447 a s223:HeatRecoveryCoil ;
+    rdfs:label "nrel00000447" ;
+    s223:cnx bldg:nrel00000660,
+        bldg:nrel00000899,
+        bldg:nrel00001166,
+        bldg:nrel00001240 ;
+    s223:hasConnectionPoint bldg:nrel00000660,
+        bldg:nrel00000899,
+        bldg:nrel00001166,
+        bldg:nrel00001240 ;
+    s223:hasProperty bldg:nrel00000199,
+        bldg:nrel00000542,
+        bldg:nrel00000585,
+        bldg:nrel00001061 .
+
+bldg:nrel00001089 a s223:HeatRecoveryCoil ;
+    rdfs:label "nrel00001089" ;
+    s223:cnx bldg:nrel00000351,
+        bldg:nrel00000618,
+        bldg:nrel00000821,
+        bldg:nrel00001304 ;
+    s223:hasConnectionPoint bldg:nrel00000351,
+        bldg:nrel00000618,
+        bldg:nrel00000821,
+        bldg:nrel00001304 ;
+    s223:hasProperty bldg:nrel00000315,
+        bldg:nrel00000368,
+        bldg:nrel00000431,
+        bldg:nrel00000488 .
+
+bldg:nrel00001100 a s223:HeatExchanger ;
+    rdfs:label "nrel00001100" ;
+    s223:cnx bldg:nrel00000261,
+        bldg:nrel00000554,
+        bldg:nrel00000577,
+        bldg:nrel00001180 ;
+    s223:contains bldg:nrel00000449,
+        bldg:nrel00001258,
+        bldg:nrel00001263 ;
+    s223:hasConnectionPoint bldg:nrel00000261,
+        bldg:nrel00000554,
+        bldg:nrel00000577,
+        bldg:nrel00001180 ;
+    s223:hasProperty bldg:nrel00000687,
+        bldg:nrel00000885,
+        bldg:nrel00001179 ;
+    s223:hasRole s223:Role-Evaporator .
+
+s223:EnumerationKind-Override a s223:Class,
+        s223:EnumerationKind-Override,
+        sh:NodeShape ;
+    rdfs:label "EnumerationKind Override" ;
+    rdfs:subClassOf s223:EnumerationKind .
+
+s223:Property a s223:Class,
+        sh:NodeShape ;
+    rdfs:label "Property" ;
+    rdfs:comment """An attribute, quality, or characteristic of a feature of interest.
+
+The Property class is the parent of all variations of a property, which are:
+ActuatableProperty - parent of subclass of properties that can be modified by user or machine outside of the model (typically command);
+ObservableProperty - parent of subclass of properties that can not be modified by user or machine outside of the model (typically measures);
+EnumerableProperty - parent of subclass of properties defined by EnumerationKind;
+QuantifiableProperty - parent of subclass of properties defined by numerical values.
+
+And their different associations :
+QuantifiableActuatableProperty,
+QuantifiableObservableProperty,
+EnumeratedObservableProperty,
+EnumeratedActuatableProperty.
+
+A QuantifiableProperty (or subClass thereof) must always be associated with a Unit and a QuantityKind, either explicitly from the Property, or through the associated Value. If the Unit is defined, the SHACL reasoner (if invoked) will figure out and assert the QuantityKind (the most general version).
+
+Enumerable properties must be associated with an EnumerationKind.
+""" ;
+    rdfs:subClassOf s223:Concept ;
+    sh:property [ rdfs:comment "If the relation hasAspect is present, it must associate the Property with an EnumerationKind." ;
+            sh:class s223:EnumerationKind ;
+            sh:path s223:hasAspect ],
+        [ rdfs:comment "If the relation hasExternalReference is present it must associate the Property with an ExternalReference." ;
+            sh:class s223:ExternalReference ;
+            sh:path s223:hasExternalReference ],
+        [ rdfs:comment "A Property can use at most one relation hasValue if it is required to provide a static value in the model. It is not meant for real-time value (see `s223:hasExternalReference`)." ;
+            sh:maxCount 1 ;
+            sh:path s223:hasValue ],
+        [ rdfs:comment "A Property can be associated with at most one EnumerationKind-Medium using the relation ofMedium." ;
+            sh:class s223:Substance-Medium ;
+            sh:maxCount 1 ;
+            sh:path s223:ofMedium ],
+        [ rdfs:comment "A Property can be associated with at most one EnumerationKind-Substance using the relation ofSubstance." ;
+            sh:class s223:EnumerationKind-Substance ;
+            sh:maxCount 1 ;
+            sh:path s223:ofSubstance ],
+        [ rdfs:comment "A Property can be associated with at most one FunctionBlock using the inverse relation hasOutput." ;
+            sh:class s223:FunctionBlock ;
+            sh:maxCount 1 ;
+            sh:message "A Property can be associated with at most one FunctionBlock using the inverse relation hasOutput." ;
+            sh:path [ sh:inversePath s223:hasOutput ] ],
+        [ rdfs:comment "" ;
+            sh:path s223:ofSubstance ;
+            sh:sparql [ a sh:SPARQLConstraint ;
+                    rdfs:comment "If an incoming relation hasConstituent exists, then the Property must have a declared substance using the relation ofSubstance." ;
+                    sh:message "Property {$this} is referred to by {?something} with s223:hasConstituent, but the Property has no value for s223:ofSubstance." ;
+                    sh:prefixes bldg:nrel00000011 ;
+                    sh:select """
+SELECT $this ?something
+WHERE {
+?something s223:hasConstituent $this .
+FILTER NOT EXISTS {$this s223:ofSubstance ?someSubstance} .
+}
+""" ] ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            rdfs:comment "A Property instance cannot be declared an instance of both an ActuatableProperty and an ObservableProperty." ;
+            sh:message "{$this} cannot be declared an instance of both an ActuatableProperty and an ObservableProperty." ;
+            sh:prefixes bldg:nrel00000011 ;
+            sh:select """
+SELECT $this
+WHERE {
+$this a/rdfs:subClassOf* s223:ActuatableProperty .
+$this a/rdfs:subClassOf* s223:ObservableProperty .
+}
+""" ] .
+
+s223:Pump a s223:Class,
+        sh:NodeShape ;
+    rdfs:label "Pump" ;
+    rdfs:comment "A machine for imparting energy to a fluid, drawing a fluid into itself through an entrance port, and forcing the fluid out through an exhaust port." ;
+    rdfs:subClassOf s223:Equipment ;
+    sh:property [ rdfs:comment "The non-electrical ConnectionPoints of a Pump must have compatible Media." ;
+            sh:path s223:hasConnectionPoint ;
+            sh:sparql [ a sh:SPARQLConstraint ;
+                    rdfs:comment "The non-electrical ConnectionPoints of a Pump must have compatible Media." ;
+                    sh:message "{?cpa} and {?cpb} on the Pump {$this} have incompatible Media {$mediuma} and {$mediumb}." ;
+                    sh:prefixes bldg:nrel00000011 ;
+                    sh:select """
+SELECT $this ?cpa ?cpb ?mediuma ?mediumb
+WHERE {
+  $this s223:hasConnectionPoint ?cpa .
+  $this s223:hasConnectionPoint ?cpb .
+  FILTER (?cpa != ?cpb) .
+  ?cpa s223:hasMedium ?mediuma .
+  FILTER (NOT EXISTS {?mediuma a/rdfs:subClassOf* s223:Medium-Electricity}) .
+  ?cpb s223:hasMedium ?mediumb .
+  FILTER (NOT EXISTS {?mediumb a/rdfs:subClassOf* s223:Medium-Electricity}) .
+  FILTER (?mediuma != ?mediumb) .
+  FILTER (NOT EXISTS {?mediumb a/rdfs:subClassOf* ?mediuma}) .
+  FILTER (NOT EXISTS {?mediuma a/rdfs:subClassOf* ?mediumb}) .
+}
+""" ] ],
+        [ rdfs:comment "A Pump shall have at least one inlet using the medium Water, Oil or Refrigerant." ;
+            sh:minCount 1 ;
+            sh:path s223:hasConnectionPoint ;
+            sh:qualifiedMinCount 1 ;
+            sh:qualifiedValueShape [ sh:class s223:InletConnectionPoint ;
+                    sh:node [ sh:or ( [ sh:property [ sh:class s223:Medium-Water ;
+                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Refrigerant ;
+                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Oil ;
+                                                sh:path s223:hasMedium ] ] ) ] ] ],
+        [ rdfs:comment "A Pump shall have at least one outlet using the medium Water, Oil or Refrigerant." ;
+            sh:minCount 1 ;
+            sh:path s223:hasConnectionPoint ;
+            sh:qualifiedMinCount 1 ;
+            sh:qualifiedValueShape [ sh:class s223:OutletConnectionPoint ;
+                    sh:node [ sh:or ( [ sh:property [ sh:class s223:Medium-Water ;
+                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Refrigerant ;
+                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Oil ;
+                                                sh:path s223:hasMedium ] ] ) ] ] ] .
+
+s223:hasDomain a rdf:Property ;
+    rdfs:label "has domain" ;
+    rdfs:comment "The relation hasDomain is used to indicate what domain a Zone or DomainSpace pertains to (e.g. HVAC, lighting, electrical, etc.). Possible values are defined in EnumerationKind-Domain (see `s223:EnumerationKind-Domain`)." .
+
+s223:observes a rdf:Property ;
+    rdfs:label "observes" ;
+    rdfs:comment "The relation observes binds a sensor to one ObservableProperty `see s223:ObservableProperty` which is used by the sensor to generate a measurement value (ex. a temperature) or a simple observation of a stimulus causing a reaction (a current binary switch that closes a dry contact when a fan is powered on)." .
+
+qudt:hasQuantityKind rdfs:comment "A reference to the QuantityKind of a QuantifiableProperty of interest, e.g. quantitykind:Temperature." .
+
+bldg:nrel00000649 a s223:DomainSpace ;
+    rdfs:label "nrel00000649" ;
+    s223:cnx bldg:nrel00000364,
+        bldg:nrel00000516,
+        bldg:nrel00000893,
+        bldg:nrel00001139 ;
+    s223:hasConnectionPoint bldg:nrel00000364,
+        bldg:nrel00000516,
+        bldg:nrel00000893,
+        bldg:nrel00001139 ;
     s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000005,
-        bldg:nrel00000319 .
+    s223:hasProperty bldg:nrel00000182,
+        bldg:nrel00001178 .
 
-bldg:nrel00000122 a s223:DomainSpace ;
-    rdfs:label "nrel00000122" ;
-    s223:cnx bldg:nrel00000074,
-        bldg:nrel00000781 ;
-    s223:connected bldg:nrel00000233 ;
-    s223:connectedFrom bldg:nrel00000233 ;
-    s223:connectedThrough bldg:nrel00001186 ;
-    s223:hasConnectionPoint bldg:nrel00000074,
-        bldg:nrel00000781 ;
+bldg:nrel00000966 a s223:DomainSpace ;
+    rdfs:label "nrel00000966" ;
+    s223:cnx bldg:nrel00000059,
+        bldg:nrel00000098,
+        bldg:nrel00000658 ;
+    s223:hasConnectionPoint bldg:nrel00000059,
+        bldg:nrel00000098,
+        bldg:nrel00000658 ;
     s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000335,
-        bldg:nrel00001167 .
+    s223:hasProperty bldg:nrel00000109,
+        bldg:nrel00000845 .
 
-bldg:nrel00000446 a s223:Filter ;
-    rdfs:label "nrel00000446" ;
-    s223:cnx bldg:nrel00000255,
-        bldg:nrel00000892 ;
-    s223:connected bldg:nrel00000254,
-        bldg:nrel00001087 ;
-    s223:connectedFrom bldg:nrel00000254 ;
-    s223:connectedThrough bldg:nrel00000077,
-        bldg:nrel00000397 ;
-    s223:connectedTo bldg:nrel00001087 ;
-    s223:hasConnectionPoint bldg:nrel00000255,
-        bldg:nrel00000892 ;
-    s223:hasProperty bldg:nrel00000564 .
-
-bldg:nrel00000587 a s223:DomainSpace ;
-    rdfs:label "nrel00000587" ;
-    s223:cnx bldg:nrel00000745,
-        bldg:nrel00000986 ;
-    s223:connected bldg:nrel00001297 ;
-    s223:connectedFrom bldg:nrel00001297 ;
-    s223:connectedThrough bldg:nrel00000088 ;
-    s223:hasConnectionPoint bldg:nrel00000745,
-        bldg:nrel00000986 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000433,
-        bldg:nrel00000844 .
-
-bldg:nrel00000600 a s223:DomainSpace ;
-    rdfs:label "nrel00000600" ;
-    s223:cnx bldg:nrel00000439,
-        bldg:nrel00001049 ;
-    s223:connected bldg:nrel00001276 ;
-    s223:connectedFrom bldg:nrel00001276 ;
-    s223:connectedThrough bldg:nrel00000346 ;
-    s223:hasConnectionPoint bldg:nrel00000439,
-        bldg:nrel00001049 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000847,
-        bldg:nrel00001059 .
-
-bldg:nrel00000631 a s223:DomainSpace ;
-    rdfs:label "nrel00000631" ;
-    s223:cnx bldg:nrel00000138,
-        bldg:nrel00001200 ;
-    s223:connected bldg:nrel00000362 ;
-    s223:connectedFrom bldg:nrel00000362 ;
-    s223:connectedThrough bldg:nrel00000490 ;
-    s223:hasConnectionPoint bldg:nrel00000138,
-        bldg:nrel00001200 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000665,
-        bldg:nrel00001085 .
-
-bldg:nrel00000675 a s223:Valve ;
-    rdfs:label "nrel00000675" ;
-    s223:cnx bldg:nrel00000574,
-        bldg:nrel00000691 ;
-    s223:connected bldg:nrel00000771,
-        bldg:nrel00001119 ;
-    s223:connectedFrom bldg:nrel00000771 ;
-    s223:connectedThrough bldg:nrel00000535,
-        bldg:nrel00001211 ;
-    s223:connectedTo bldg:nrel00001119 ;
-    s223:hasConnectionPoint bldg:nrel00000574,
-        bldg:nrel00000691 ;
-    s223:hasProperty bldg:nrel00000347,
-        bldg:nrel00001153 .
-
-bldg:nrel00000736 a s223:DomainSpace ;
-    rdfs:label "nrel00000736" ;
-    s223:cnx bldg:nrel00000045,
-        bldg:nrel00000162 ;
-    s223:connected bldg:nrel00000280 ;
-    s223:connectedFrom bldg:nrel00000280 ;
-    s223:connectedThrough bldg:nrel00000807 ;
-    s223:hasConnectionPoint bldg:nrel00000045,
-        bldg:nrel00000162 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00001014,
-        bldg:nrel00001295 .
-
-bldg:nrel00000771 a s223:Filter ;
-    rdfs:label "nrel00000771" ;
-    s223:cnx bldg:nrel00000307,
-        bldg:nrel00000699 ;
-    s223:connected bldg:nrel00000675,
-        bldg:nrel00001089 ;
-    s223:connectedFrom bldg:nrel00001089 ;
-    s223:connectedThrough bldg:nrel00000517,
-        bldg:nrel00000535 ;
-    s223:connectedTo bldg:nrel00000675 ;
-    s223:hasConnectionPoint bldg:nrel00000307,
-        bldg:nrel00000699 ;
-    s223:hasProperty bldg:nrel00000154 .
-
-bldg:nrel00000818 a s223:DomainSpace ;
-    rdfs:label "nrel00000818" ;
-    s223:cnx bldg:nrel00000221,
-        bldg:nrel00001086 ;
-    s223:connected bldg:nrel00001185 ;
-    s223:connectedFrom bldg:nrel00001185 ;
-    s223:connectedThrough bldg:nrel00000932 ;
-    s223:hasConnectionPoint bldg:nrel00000221,
-        bldg:nrel00001086 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000739,
-        bldg:nrel00001130 .
-
-bldg:nrel00000862 a s223:DomainSpace ;
-    rdfs:label "nrel00000862" ;
-    s223:cnx bldg:nrel00000219,
-        bldg:nrel00000792 ;
-    s223:connected bldg:nrel00000365 ;
-    s223:connectedFrom bldg:nrel00000365 ;
-    s223:connectedThrough bldg:nrel00000374 ;
-    s223:hasConnectionPoint bldg:nrel00000219,
-        bldg:nrel00000792 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000417,
-        bldg:nrel00001134 .
-
-bldg:nrel00000939 a s223:DomainSpace ;
-    rdfs:label "nrel00000939" ;
-    s223:cnx bldg:nrel00000281,
-        bldg:nrel00000474 ;
-    s223:connected bldg:nrel00000958 ;
-    s223:connectedFrom bldg:nrel00000958 ;
-    s223:connectedThrough bldg:nrel00000615 ;
-    s223:hasConnectionPoint bldg:nrel00000281,
-        bldg:nrel00000474 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000308,
-        bldg:nrel00001090 .
-
-bldg:nrel00000941 a s223:DomainSpace ;
-    rdfs:label "nrel00000941" ;
-    s223:cnx bldg:nrel00000251,
-        bldg:nrel00000846 ;
-    s223:connected bldg:nrel00000435 ;
-    s223:connectedFrom bldg:nrel00000435 ;
-    s223:connectedThrough bldg:nrel00000502 ;
-    s223:hasConnectionPoint bldg:nrel00000251,
-        bldg:nrel00000846 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000404,
-        bldg:nrel00000681 .
-
-bldg:nrel00001087 a s223:Filter ;
-    rdfs:label "nrel00001087" ;
-    s223:cnx bldg:nrel00000107,
-        bldg:nrel00000908 ;
-    s223:connected bldg:nrel00000446,
-        bldg:nrel00000447 ;
-    s223:connectedFrom bldg:nrel00000446 ;
-    s223:connectedThrough bldg:nrel00000397,
-        bldg:nrel00000875 ;
-    s223:connectedTo bldg:nrel00000447 ;
-    s223:hasConnectionPoint bldg:nrel00000107,
-        bldg:nrel00000908 ;
-    s223:hasProperty bldg:nrel00001213 .
-
-bldg:nrel00001096 a s223:Junction ;
-    rdfs:label "nrel00001096" ;
-    s223:cnx bldg:nrel00000265,
-        bldg:nrel00000876,
-        bldg:nrel00001135 ;
-    s223:connected bldg:nrel00001096 ;
-    s223:connectedFrom bldg:nrel00001096 ;
-    s223:connectedThrough bldg:nrel00001321 ;
-    s223:connectedTo bldg:nrel00001096 ;
-    s223:hasConnectionPoint bldg:nrel00000265,
-        bldg:nrel00000876,
-        bldg:nrel00001135 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00001125 a s223:DomainSpace ;
-    rdfs:label "nrel00001125" ;
-    s223:cnx bldg:nrel00001064,
-        bldg:nrel00001259 ;
-    s223:connected bldg:nrel00000209 ;
-    s223:connectedFrom bldg:nrel00000209 ;
-    s223:connectedThrough bldg:nrel00000995 ;
-    s223:hasConnectionPoint bldg:nrel00001064,
-        bldg:nrel00001259 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000002,
-        bldg:nrel00001280 .
-
-bldg:nrel00001197 a s223:DomainSpace ;
-    rdfs:label "nrel00001197" ;
-    s223:cnx bldg:nrel00000466,
-        bldg:nrel00000590 ;
-    s223:connected bldg:nrel00000187 ;
-    s223:connectedFrom bldg:nrel00000187 ;
-    s223:connectedThrough bldg:nrel00000725 ;
-    s223:hasConnectionPoint bldg:nrel00000466,
-        bldg:nrel00000590 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000499,
-        bldg:nrel00001306 .
+s223:Connectable a s223:Class,
+        sh:NodeShape ;
+    rdfs:label "Connectable" ;
+    s223:abstract true ;
+    rdfs:comment "Connectable is an abstract class representing a thing such as, Equipment (see `s223:Equipment`), DomainSpace (see `s223:DomainSpace`), or Junction (see `s223:Junction`) that can be connected via ConnectionPoints and Connections." ;
+    rdfs:subClassOf s223:Concept ;
+    sh:property [ rdfs:comment "If the relation cnx is present it must associate the Connectable with a ConnectionPoint." ;
+            sh:class s223:ConnectionPoint ;
+            sh:path s223:cnx ],
+        [ rdfs:comment "If the relation connected is present it must associate the Connectable with a Connectable." ;
+            sh:class s223:Connectable ;
+            sh:name "SymmetricConnectableToConnectableShape" ;
+            sh:path s223:connected ],
+        [ rdfs:comment "If the relation connectedFrom is present it must associate the Connectable with a Connectable." ;
+            sh:class s223:Connectable ;
+            sh:path s223:connectedFrom ],
+        [ rdfs:comment "If the relation connectedThrough is present it must associate the Connectable with a Connection." ;
+            sh:class s223:Connection ;
+            sh:name "EquipmentToConnectionShape" ;
+            sh:path s223:connectedThrough ],
+        [ rdfs:comment "If the relation connectedTo is present it must associate the Connectable with a Connectable." ;
+            sh:class s223:Connectable ;
+            sh:name "ConnectableToConnectableShape" ;
+            sh:path s223:connectedTo ],
+        [ rdfs:comment "If the relation hasConnectionPoint is present it must associate the Connectable with a ConnectionPoint." ;
+            sh:class s223:ConnectionPoint ;
+            sh:name "EquipmentToConnectionPointShape" ;
+            sh:path s223:hasConnectionPoint ],
+        [ rdfs:comment "For a Connectable, cnx relation must associate the Connectable to a ConnectionPoint" ;
+            sh:path s223:cnx ;
+            sh:sparql [ a sh:SPARQLConstraint ;
+                    rdfs:comment "A Connectable should only have a s223:cnx relation with a ConnectionPoint" ;
+                    sh:message "{$this} cannot have a s223:cnx relation to {?something}, because {?something} is not a ConnectionPoint." ;
+                    sh:prefixes bldg:nrel00000011 ;
+                    sh:select """SELECT $this ?something
+WHERE {
+$this s223:cnx ?something .
+FILTER NOT EXISTS {?something a/rdfs:subClassOf* s223:ConnectionPoint} .
+}""" ] ],
+        [ rdfs:comment "If a Connectable has s223:connected or s223:connectedTo (i.e. high-level connection specification), it must also have the supporting cnx relations (low-level connection specification)." ;
+            sh:path s223:cnx ;
+            sh:severity sh:Warning ;
+            sh:sparql [ a sh:SPARQLConstraint ;
+                    rdfs:comment "If a Connectable has s223:connected or s223:connectedTo (i.e. high-level connection specification), it must also have the supporting cnx relations (low-level connection specification)." ;
+                    sh:message "{$this} is s223:connected (high-level) to {?otherC} but not connected at the cnx-level." ;
+                    sh:prefixes bldg:nrel00000011 ;
+                    sh:select """
+SELECT $this ?otherC
+WHERE {
+$this s223:connected ?otherC .
+FILTER NOT EXISTS {$this s223:cnx+ ?otherC}
+}
+""" ] ] ;
+    sh:rule [ a sh:SPARQLRule ;
+            rdfs:comment "Infer the connected relation for BiDirectional connections" ;
+            sh:construct """
+CONSTRUCT {$this s223:connected ?d2 .}
+WHERE {
+$this s223:connectedThrough/^s223:connectedThrough ?d2 .
+FILTER ($this != ?d2) .
+FILTER NOT EXISTS {$this s223:contains* ?d2} .
+FILTER NOT EXISTS {?d2 s223:contains* $this} .
+}
+""" ;
+            sh:name "InferredEquipmentToDownstreamEquipmentProperty" ;
+            sh:prefixes bldg:nrel00000011 ],
+        [ a sh:TripleRule ;
+            rdfs:comment "Infer the connected relation using connectedTo" ;
+            sh:name "InferredEquipmentToEquipmentPropertyfromconnectedTo" ;
+            sh:object [ sh:path s223:connectedTo ] ;
+            sh:predicate s223:connected ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            rdfs:comment "Infer the connectedThrough relation using hasConnectionPoint and connectsThrough" ;
+            sh:name "InferredEquipmentToConnectionProperty" ;
+            sh:object [ sh:path ( s223:hasConnectionPoint s223:connectsThrough ) ] ;
+            sh:predicate s223:connectedThrough ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            rdfs:comment "Infer the hasConnectionPoint relation using cnx" ;
+            sh:name "InferredEquipmentToConnectionPointProperty" ;
+            sh:object [ sh:path s223:cnx ] ;
+            sh:predicate s223:hasConnectionPoint ;
+            sh:subject sh:this ],
+        [ a sh:SPARQLRule ;
+            rdfs:comment "Infer the connectedFrom relations using connectsThrough and connectsFrom." ;
+            sh:construct """
+CONSTRUCT {$this s223:connectedFrom ?equipment .}
+WHERE {
+$this s223:hasConnectionPoint ?cp .
+?cp a s223:InletConnectionPoint .
+?cp s223:connectsThrough/s223:connectsFrom ?equipment .
+}
+""" ;
+            sh:name "InferredEquipmentToUpstreamEquipmentProperty" ;
+            sh:prefixes bldg:nrel00000011 ],
+        [ a sh:SPARQLRule ;
+            rdfs:comment "Infer the connectedTo relation using connectsThrough and connectsTo." ;
+            sh:construct """
+CONSTRUCT {$this s223:connectedTo ?equipment .}
+WHERE {
+$this s223:hasConnectionPoint ?cp .
+?cp a s223:OutletConnectionPoint .
+?cp s223:connectsThrough/s223:connectsTo ?equipment .
+}
+""" ;
+            sh:name "InferredEquipmentToDownstreamEquipmentProperty" ;
+            sh:prefixes bldg:nrel00000011 ],
+        [ a sh:TripleRule ;
+            rdfs:comment "Infer the cnx relationship using hasConnectionPoint." ;
+            sh:name "InferredEquipmentToConnectionPointCnxProperty" ;
+            sh:object [ sh:path s223:hasConnectionPoint ] ;
+            sh:predicate s223:cnx ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            rdfs:comment "Infer the cnx relation using isConnectionPointOf." ;
+            sh:name "InferredEquipmentToConnectionPointCnxPropertyFromInverse" ;
+            sh:object [ sh:path [ sh:inversePath s223:isConnectionPointOf ] ] ;
+            sh:predicate s223:cnx ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            rdfs:comment "Infer the connected relation using connectedFrom" ;
+            sh:name "InferredEquipmentToEquipmentPropertyfromconnectedFrom" ;
+            sh:object [ sh:path s223:connectedFrom ] ;
+            sh:predicate s223:connected ;
+            sh:subject sh:this ] .
 
 s223:ConnectionPoint a s223:Class,
         sh:NodeShape ;
@@ -14122,478 +14450,6 @@ FILTER NOT EXISTS {?otherEquipment s223:contains ?equipment}
 }
 """ ] ] .
 
-s223:EnumerationKind-Override a s223:Class,
-        s223:EnumerationKind-Override,
-        sh:NodeShape ;
-    rdfs:label "EnumerationKind Override" ;
-    rdfs:subClassOf s223:EnumerationKind .
-
-s223:Property a s223:Class,
-        sh:NodeShape ;
-    rdfs:label "Property" ;
-    rdfs:comment """An attribute, quality, or characteristic of a feature of interest.
-
-The Property class is the parent of all variations of a property, which are:
-ActuatableProperty - parent of subclass of properties that can be modified by user or machine outside of the model (typically command);
-ObservableProperty - parent of subclass of properties that can not be modified by user or machine outside of the model (typically measures);
-EnumerableProperty - parent of subclass of properties defined by EnumerationKind;
-QuantifiableProperty - parent of subclass of properties defined by numerical values.
-
-And their different associations :
-QuantifiableActuatableProperty,
-QuantifiableObservableProperty,
-EnumeratedObservableProperty,
-EnumeratedActuatableProperty.
-
-A QuantifiableProperty (or subClass thereof) must always be associated with a Unit and a QuantityKind, either explicitly from the Property, or through the associated Value. If the Unit is defined, the SHACL reasoner (if invoked) will figure out and assert the QuantityKind (the most general version).
-
-Enumerable properties must be associated with an EnumerationKind.
-""" ;
-    rdfs:subClassOf s223:Concept ;
-    sh:property [ rdfs:comment "If the relation hasAspect is present, it must associate the Property with an EnumerationKind." ;
-            sh:class s223:EnumerationKind ;
-            sh:path s223:hasAspect ],
-        [ rdfs:comment "If the relation hasExternalReference is present it must associate the Property with an ExternalReference." ;
-            sh:class s223:ExternalReference ;
-            sh:path s223:hasExternalReference ],
-        [ rdfs:comment "A Property can use at most one relation hasValue if it is required to provide a static value in the model. It is not meant for real-time value (see `s223:hasExternalReference`)." ;
-            sh:maxCount 1 ;
-            sh:path s223:hasValue ],
-        [ rdfs:comment "A Property can be associated with at most one EnumerationKind-Medium using the relation ofMedium." ;
-            sh:class s223:Substance-Medium ;
-            sh:maxCount 1 ;
-            sh:path s223:ofMedium ],
-        [ rdfs:comment "A Property can be associated with at most one EnumerationKind-Substance using the relation ofSubstance." ;
-            sh:class s223:EnumerationKind-Substance ;
-            sh:maxCount 1 ;
-            sh:path s223:ofSubstance ],
-        [ rdfs:comment "A Property can be associated with at most one FunctionBlock using the inverse relation hasOutput." ;
-            sh:class s223:FunctionBlock ;
-            sh:maxCount 1 ;
-            sh:message "A Property can be associated with at most one FunctionBlock using the inverse relation hasOutput." ;
-            sh:path [ sh:inversePath s223:hasOutput ] ],
-        [ rdfs:comment "" ;
-            sh:path s223:ofSubstance ;
-            sh:sparql [ a sh:SPARQLConstraint ;
-                    rdfs:comment "If an incoming relation hasConstituent exists, then the Property must have a declared substance using the relation ofSubstance." ;
-                    sh:message "Property {$this} is referred to by {?something} with s223:hasConstituent, but the Property has no value for s223:ofSubstance." ;
-                    sh:prefixes bldg:nrel00000011 ;
-                    sh:select """
-SELECT $this ?something
-WHERE {
-?something s223:hasConstituent $this .
-FILTER NOT EXISTS {$this s223:ofSubstance ?someSubstance} .
-}
-""" ] ] ;
-    sh:sparql [ a sh:SPARQLConstraint ;
-            rdfs:comment "A Property instance cannot be declared an instance of both an ActuatableProperty and an ObservableProperty." ;
-            sh:message "{$this} cannot be declared an instance of both an ActuatableProperty and an ObservableProperty." ;
-            sh:prefixes bldg:nrel00000011 ;
-            sh:select """
-SELECT $this
-WHERE {
-$this a/rdfs:subClassOf* s223:ActuatableProperty .
-$this a/rdfs:subClassOf* s223:ObservableProperty .
-}
-""" ] .
-
-s223:Pump a s223:Class,
-        sh:NodeShape ;
-    rdfs:label "Pump" ;
-    rdfs:comment "A machine for imparting energy to a fluid, drawing a fluid into itself through an entrance port, and forcing the fluid out through an exhaust port." ;
-    rdfs:subClassOf s223:Equipment ;
-    sh:property [ rdfs:comment "A Pump shall have at least one inlet using the medium Water, Oil or Refrigerant." ;
-            sh:minCount 1 ;
-            sh:path s223:hasConnectionPoint ;
-            sh:qualifiedMinCount 1 ;
-            sh:qualifiedValueShape [ sh:class s223:InletConnectionPoint ;
-                    sh:node [ sh:or ( [ sh:property [ sh:class s223:Medium-Water ;
-                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Refrigerant ;
-                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Oil ;
-                                                sh:path s223:hasMedium ] ] ) ] ] ],
-        [ rdfs:comment "A Pump shall have at least one outlet using the medium Water, Oil or Refrigerant." ;
-            sh:minCount 1 ;
-            sh:path s223:hasConnectionPoint ;
-            sh:qualifiedMinCount 1 ;
-            sh:qualifiedValueShape [ sh:class s223:OutletConnectionPoint ;
-                    sh:node [ sh:or ( [ sh:property [ sh:class s223:Medium-Water ;
-                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Refrigerant ;
-                                                sh:path s223:hasMedium ] ] [ sh:property [ sh:class s223:Medium-Oil ;
-                                                sh:path s223:hasMedium ] ] ) ] ] ],
-        [ rdfs:comment "The non-electrical ConnectionPoints of a Pump must have compatible Media." ;
-            sh:path s223:hasConnectionPoint ;
-            sh:sparql [ a sh:SPARQLConstraint ;
-                    rdfs:comment "The non-electrical ConnectionPoints of a Pump must have compatible Media." ;
-                    sh:message "{?cpa} and {?cpb} on the Pump {$this} have incompatible Media {$mediuma} and {$mediumb}." ;
-                    sh:prefixes bldg:nrel00000011 ;
-                    sh:select """
-SELECT $this ?cpa ?cpb ?mediuma ?mediumb
-WHERE {
-  $this s223:hasConnectionPoint ?cpa .
-  $this s223:hasConnectionPoint ?cpb .
-  FILTER (?cpa != ?cpb) .
-  ?cpa s223:hasMedium ?mediuma .
-  FILTER (NOT EXISTS {?mediuma a/rdfs:subClassOf* s223:Medium-Electricity}) .
-  ?cpb s223:hasMedium ?mediumb .
-  FILTER (NOT EXISTS {?mediumb a/rdfs:subClassOf* s223:Medium-Electricity}) .
-  FILTER (?mediuma != ?mediumb) .
-  FILTER (NOT EXISTS {?mediumb a/rdfs:subClassOf* ?mediuma}) .
-  FILTER (NOT EXISTS {?mediuma a/rdfs:subClassOf* ?mediumb}) .
-}
-""" ] ] .
-
-s223:hasDomain a rdf:Property ;
-    rdfs:label "has domain" ;
-    rdfs:comment "The relation hasDomain is used to indicate what domain a Zone or DomainSpace pertains to (e.g. HVAC, lighting, electrical, etc.). Possible values are defined in EnumerationKind-Domain (see `s223:EnumerationKind-Domain`)." .
-
-s223:observes a rdf:Property ;
-    rdfs:label "observes" ;
-    rdfs:comment "The relation observes binds a sensor to one ObservableProperty `see s223:ObservableProperty` which is used by the sensor to generate a measurement value (ex. a temperature) or a simple observation of a stimulus causing a reaction (a current binary switch that closes a dry contact when a fan is powered on)." .
-
-qudt:hasQuantityKind rdfs:comment "A reference to the QuantityKind of a QuantifiableProperty of interest, e.g. quantitykind:Temperature." .
-
-bldg:nrel00000084 a s223:HeatingCoil ;
-    rdfs:label "nrel00000084" ;
-    s223:cnx bldg:nrel00000151,
-        bldg:nrel00000167,
-        bldg:nrel00000432,
-        bldg:nrel00000991 ;
-    s223:connected bldg:nrel00000815 ;
-    s223:connectedFrom bldg:nrel00000815 ;
-    s223:connectedThrough bldg:nrel00000605 ;
-    s223:contains bldg:nrel00000133,
-        bldg:nrel00000593,
-        bldg:nrel00000772 ;
-    s223:hasConnectionPoint bldg:nrel00000151,
-        bldg:nrel00000167,
-        bldg:nrel00000432,
-        bldg:nrel00000991 ;
-    s223:hasProperty bldg:nrel00000978,
-        bldg:nrel00001235 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000273 a s223:HeatingCoil ;
-    rdfs:label "nrel00000273" ;
-    s223:cnx bldg:nrel00000040,
-        bldg:nrel00000638,
-        bldg:nrel00000720,
-        bldg:nrel00001069 ;
-    s223:connected bldg:nrel00000205 ;
-    s223:connectedFrom bldg:nrel00000205 ;
-    s223:connectedThrough bldg:nrel00000759 ;
-    s223:contains bldg:nrel00000214,
-        bldg:nrel00000293,
-        bldg:nrel00000920 ;
-    s223:hasConnectionPoint bldg:nrel00000040,
-        bldg:nrel00000638,
-        bldg:nrel00000720,
-        bldg:nrel00001069 ;
-    s223:hasProperty bldg:nrel00000412,
-        bldg:nrel00000419 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000460 a s223:HeatingCoil ;
-    rdfs:label "nrel00000460" ;
-    s223:cnx bldg:nrel00000065,
-        bldg:nrel00001050,
-        bldg:nrel00001072,
-        bldg:nrel00001107 ;
-    s223:connected bldg:nrel00000110 ;
-    s223:connectedFrom bldg:nrel00000110 ;
-    s223:connectedThrough bldg:nrel00000813 ;
-    s223:contains bldg:nrel00000300,
-        bldg:nrel00000817,
-        bldg:nrel00001162 ;
-    s223:hasConnectionPoint bldg:nrel00000065,
-        bldg:nrel00001050,
-        bldg:nrel00001072,
-        bldg:nrel00001107 ;
-    s223:hasProperty bldg:nrel00000518,
-        bldg:nrel00000684 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000533 a s223:HeatingCoil ;
-    rdfs:label "nrel00000533" ;
-    s223:cnx bldg:nrel00000485,
-        bldg:nrel00000579,
-        bldg:nrel00001285,
-        bldg:nrel00001299 ;
-    s223:connected bldg:nrel00000755 ;
-    s223:connectedFrom bldg:nrel00000755 ;
-    s223:connectedThrough bldg:nrel00000130 ;
-    s223:contains bldg:nrel00000188,
-        bldg:nrel00000418,
-        bldg:nrel00001012 ;
-    s223:hasConnectionPoint bldg:nrel00000485,
-        bldg:nrel00000579,
-        bldg:nrel00001285,
-        bldg:nrel00001299 ;
-    s223:hasProperty bldg:nrel00000166,
-        bldg:nrel00000457 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000591 a s223:HeatingCoil ;
-    rdfs:label "nrel00000591" ;
-    s223:cnx bldg:nrel00000200,
-        bldg:nrel00000306,
-        bldg:nrel00001136,
-        bldg:nrel00001226 ;
-    s223:connected bldg:nrel00000628 ;
-    s223:connectedFrom bldg:nrel00000628 ;
-    s223:connectedThrough bldg:nrel00000328 ;
-    s223:contains bldg:nrel00000039,
-        bldg:nrel00000416,
-        bldg:nrel00000604 ;
-    s223:hasConnectionPoint bldg:nrel00000200,
-        bldg:nrel00000306,
-        bldg:nrel00001136,
-        bldg:nrel00001226 ;
-    s223:hasProperty bldg:nrel00000933,
-        bldg:nrel00001255 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000649 a s223:DomainSpace ;
-    rdfs:label "nrel00000649" ;
-    s223:cnx bldg:nrel00000364,
-        bldg:nrel00000516,
-        bldg:nrel00000893,
-        bldg:nrel00001139 ;
-    s223:hasConnectionPoint bldg:nrel00000364,
-        bldg:nrel00000516,
-        bldg:nrel00000893,
-        bldg:nrel00001139 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000182,
-        bldg:nrel00001178 .
-
-bldg:nrel00000683 a s223:HeatExchanger ;
-    rdfs:label "nrel00000683" ;
-    s223:cnx bldg:nrel00000183,
-        bldg:nrel00000189,
-        bldg:nrel00000271,
-        bldg:nrel00000923 ;
-    s223:connected bldg:nrel00000061 ;
-    s223:connectedFrom bldg:nrel00000061 ;
-    s223:connectedThrough bldg:nrel00000642 ;
-    s223:contains bldg:nrel00000083,
-        bldg:nrel00000344,
-        bldg:nrel00000546 ;
-    s223:hasConnectionPoint bldg:nrel00000183,
-        bldg:nrel00000189,
-        bldg:nrel00000271,
-        bldg:nrel00000923 ;
-    s223:hasProperty bldg:nrel00000067,
-        bldg:nrel00000163,
-        bldg:nrel00001094 ;
-    s223:hasRole s223:Role-Evaporator .
-
-bldg:nrel00000782 a s223:HeatingCoil ;
-    rdfs:label "nrel00000782" ;
-    s223:cnx bldg:nrel00000190,
-        bldg:nrel00000722,
-        bldg:nrel00001046,
-        bldg:nrel00001052 ;
-    s223:connected bldg:nrel00001231 ;
-    s223:connectedFrom bldg:nrel00001231 ;
-    s223:connectedThrough bldg:nrel00000022 ;
-    s223:contains bldg:nrel00000148,
-        bldg:nrel00000647,
-        bldg:nrel00001037 ;
-    s223:hasConnectionPoint bldg:nrel00000190,
-        bldg:nrel00000722,
-        bldg:nrel00001046,
-        bldg:nrel00001052 ;
-    s223:hasProperty bldg:nrel00000820,
-        bldg:nrel00001067 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000799 a s223:HeatingCoil ;
-    rdfs:label "nrel00000799" ;
-    s223:cnx bldg:nrel00000161,
-        bldg:nrel00001056,
-        bldg:nrel00001183,
-        bldg:nrel00001300 ;
-    s223:connected bldg:nrel00000312 ;
-    s223:connectedFrom bldg:nrel00000312 ;
-    s223:connectedThrough bldg:nrel00000911 ;
-    s223:contains bldg:nrel00000217,
-        bldg:nrel00000613,
-        bldg:nrel00001292 ;
-    s223:hasConnectionPoint bldg:nrel00000161,
-        bldg:nrel00001056,
-        bldg:nrel00001183,
-        bldg:nrel00001300 ;
-    s223:hasProperty bldg:nrel00000147,
-        bldg:nrel00000565 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00001008 a s223:HeatingCoil ;
-    rdfs:label "nrel00001008" ;
-    s223:cnx bldg:nrel00000017,
-        bldg:nrel00000305,
-        bldg:nrel00000797,
-        bldg:nrel00001144 ;
-    s223:connected bldg:nrel00000192 ;
-    s223:connectedFrom bldg:nrel00000192 ;
-    s223:connectedThrough bldg:nrel00000426 ;
-    s223:contains bldg:nrel00000092,
-        bldg:nrel00000400,
-        bldg:nrel00000454 ;
-    s223:hasConnectionPoint bldg:nrel00000017,
-        bldg:nrel00000305,
-        bldg:nrel00000797,
-        bldg:nrel00001144 ;
-    s223:hasProperty bldg:nrel00000275,
-        bldg:nrel00000738 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00001232 a s223:HeatingCoil ;
-    rdfs:label "nrel00001232" ;
-    s223:cnx bldg:nrel00000000,
-        bldg:nrel00000032,
-        bldg:nrel00000465,
-        bldg:nrel00001284 ;
-    s223:connected bldg:nrel00001223 ;
-    s223:connectedFrom bldg:nrel00001223 ;
-    s223:connectedThrough bldg:nrel00000998 ;
-    s223:contains bldg:nrel00000309,
-        bldg:nrel00000602,
-        bldg:nrel00001303 ;
-    s223:hasConnectionPoint bldg:nrel00000000,
-        bldg:nrel00000032,
-        bldg:nrel00000465,
-        bldg:nrel00001284 ;
-    s223:hasProperty bldg:nrel00000358,
-        bldg:nrel00001220 ;
-    s223:hasRole s223:Role-Heating .
-
-s223:Connectable a s223:Class,
-        sh:NodeShape ;
-    rdfs:label "Connectable" ;
-    s223:abstract true ;
-    rdfs:comment "Connectable is an abstract class representing a thing such as, Equipment (see `s223:Equipment`), DomainSpace (see `s223:DomainSpace`), or Junction (see `s223:Junction`) that can be connected via ConnectionPoints and Connections." ;
-    rdfs:subClassOf s223:Concept ;
-    sh:property [ rdfs:comment "If the relation cnx is present it must associate the Connectable with a ConnectionPoint." ;
-            sh:class s223:ConnectionPoint ;
-            sh:path s223:cnx ],
-        [ rdfs:comment "If the relation connected is present it must associate the Connectable with a Connectable." ;
-            sh:class s223:Connectable ;
-            sh:name "SymmetricConnectableToConnectableShape" ;
-            sh:path s223:connected ],
-        [ rdfs:comment "If the relation connectedFrom is present it must associate the Connectable with a Connectable." ;
-            sh:class s223:Connectable ;
-            sh:path s223:connectedFrom ],
-        [ rdfs:comment "If the relation connectedThrough is present it must associate the Connectable with a Connection." ;
-            sh:class s223:Connection ;
-            sh:name "EquipmentToConnectionShape" ;
-            sh:path s223:connectedThrough ],
-        [ rdfs:comment "If the relation connectedTo is present it must associate the Connectable with a Connectable." ;
-            sh:class s223:Connectable ;
-            sh:name "ConnectableToConnectableShape" ;
-            sh:path s223:connectedTo ],
-        [ rdfs:comment "If the relation hasConnectionPoint is present it must associate the Connectable with a ConnectionPoint." ;
-            sh:class s223:ConnectionPoint ;
-            sh:name "EquipmentToConnectionPointShape" ;
-            sh:path s223:hasConnectionPoint ],
-        [ rdfs:comment "For a Connectable, cnx relation must associate the Connectable to a ConnectionPoint" ;
-            sh:path s223:cnx ;
-            sh:sparql [ a sh:SPARQLConstraint ;
-                    rdfs:comment "A Connectable should only have a s223:cnx relation with a ConnectionPoint" ;
-                    sh:message "{$this} cannot have a s223:cnx relation to {?something}, because {?something} is not a ConnectionPoint." ;
-                    sh:prefixes bldg:nrel00000011 ;
-                    sh:select """SELECT $this ?something
-WHERE {
-$this s223:cnx ?something .
-FILTER NOT EXISTS {?something a/rdfs:subClassOf* s223:ConnectionPoint} .
-}""" ] ],
-        [ rdfs:comment "If a Connectable has s223:connected or s223:connectedTo (i.e. high-level connection specification), it must also have the supporting cnx relations (low-level connection specification)." ;
-            sh:path s223:cnx ;
-            sh:severity sh:Warning ;
-            sh:sparql [ a sh:SPARQLConstraint ;
-                    rdfs:comment "If a Connectable has s223:connected or s223:connectedTo (i.e. high-level connection specification), it must also have the supporting cnx relations (low-level connection specification)." ;
-                    sh:message "{$this} is s223:connected (high-level) to {?otherC} but not connected at the cnx-level." ;
-                    sh:prefixes bldg:nrel00000011 ;
-                    sh:select """
-SELECT $this ?otherC
-WHERE {
-$this s223:connected ?otherC .
-FILTER NOT EXISTS {$this s223:cnx+ ?otherC}
-}
-""" ] ] ;
-    sh:rule [ a sh:SPARQLRule ;
-            rdfs:comment "Infer the connected relation for BiDirectional connections" ;
-            sh:construct """
-CONSTRUCT {$this s223:connected ?d2 .}
-WHERE {
-$this s223:connectedThrough/^s223:connectedThrough ?d2 .
-FILTER ($this != ?d2) .
-FILTER NOT EXISTS {$this s223:contains* ?d2} .
-FILTER NOT EXISTS {?d2 s223:contains* $this} .
-}
-""" ;
-            sh:name "InferredEquipmentToDownstreamEquipmentProperty" ;
-            sh:prefixes bldg:nrel00000011 ],
-        [ a sh:TripleRule ;
-            rdfs:comment "Infer the connected relation using connectedTo" ;
-            sh:name "InferredEquipmentToEquipmentPropertyfromconnectedTo" ;
-            sh:object [ sh:path s223:connectedTo ] ;
-            sh:predicate s223:connected ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            rdfs:comment "Infer the connectedThrough relation using hasConnectionPoint and connectsThrough" ;
-            sh:name "InferredEquipmentToConnectionProperty" ;
-            sh:object [ sh:path ( s223:hasConnectionPoint s223:connectsThrough ) ] ;
-            sh:predicate s223:connectedThrough ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            rdfs:comment "Infer the hasConnectionPoint relation using cnx" ;
-            sh:name "InferredEquipmentToConnectionPointProperty" ;
-            sh:object [ sh:path s223:cnx ] ;
-            sh:predicate s223:hasConnectionPoint ;
-            sh:subject sh:this ],
-        [ a sh:SPARQLRule ;
-            rdfs:comment "Infer the connectedFrom relations using connectsThrough and connectsFrom." ;
-            sh:construct """
-CONSTRUCT {$this s223:connectedFrom ?equipment .}
-WHERE {
-$this s223:hasConnectionPoint ?cp .
-?cp a s223:InletConnectionPoint .
-?cp s223:connectsThrough/s223:connectsFrom ?equipment .
-}
-""" ;
-            sh:name "InferredEquipmentToUpstreamEquipmentProperty" ;
-            sh:prefixes bldg:nrel00000011 ],
-        [ a sh:SPARQLRule ;
-            rdfs:comment "Infer the connectedTo relation using connectsThrough and connectsTo." ;
-            sh:construct """
-CONSTRUCT {$this s223:connectedTo ?equipment .}
-WHERE {
-$this s223:hasConnectionPoint ?cp .
-?cp a s223:OutletConnectionPoint .
-?cp s223:connectsThrough/s223:connectsTo ?equipment .
-}
-""" ;
-            sh:name "InferredEquipmentToDownstreamEquipmentProperty" ;
-            sh:prefixes bldg:nrel00000011 ],
-        [ a sh:TripleRule ;
-            rdfs:comment "Infer the cnx relationship using hasConnectionPoint." ;
-            sh:name "InferredEquipmentToConnectionPointCnxProperty" ;
-            sh:object [ sh:path s223:hasConnectionPoint ] ;
-            sh:predicate s223:cnx ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            rdfs:comment "Infer the cnx relation using isConnectionPointOf." ;
-            sh:name "InferredEquipmentToConnectionPointCnxPropertyFromInverse" ;
-            sh:object [ sh:path [ sh:inversePath s223:isConnectionPointOf ] ] ;
-            sh:predicate s223:cnx ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            rdfs:comment "Infer the connected relation using connectedFrom" ;
-            sh:name "InferredEquipmentToEquipmentPropertyfromconnectedFrom" ;
-            sh:object [ sh:path s223:connectedFrom ] ;
-            sh:predicate s223:connected ;
-            sh:subject sh:this ] .
-
 s223:DCVoltage-DCZeroVoltage a s223:Class,
         s223:DCVoltage-DCZeroVoltage,
         sh:NodeShape ;
@@ -14649,6 +14505,24 @@ s223:EnumerationKind-Domain a s223:Class,
     rdfs:label "EnumerationKind Domain" ;
     rdfs:comment "A Domain represents a categorization of building services or specialization used to characterize equipment or spaces in a building. Example domains include HVAC, Lighting, and Plumbing." ;
     rdfs:subClassOf s223:EnumerationKind .
+
+bldg:nrel00001113 a s223:Junction ;
+    rdfs:label "nrel00001113" ;
+    s223:cnx bldg:nrel00000043,
+        bldg:nrel00000790,
+        bldg:nrel00000802,
+        bldg:nrel00000841,
+        bldg:nrel00001182,
+        bldg:nrel00001203,
+        bldg:nrel00001242 ;
+    s223:hasConnectionPoint bldg:nrel00000043,
+        bldg:nrel00000790,
+        bldg:nrel00000802,
+        bldg:nrel00000841,
+        bldg:nrel00001182,
+        bldg:nrel00001203,
+        bldg:nrel00001242 ;
+    s223:hasMedium s223:Medium-Air .
 
 s223:Concept a s223:Class,
         sh:NodeShape ;
@@ -14717,139 +14591,6 @@ s223:Fan a s223:Class,
                     sh:node [ sh:property [ sh:class s223:Medium-Air ;
                                     sh:path s223:hasMedium ] ] ] ] .
 
-bldg:nrel00000007 a s223:HeatingCoil ;
-    rdfs:label "nrel00000007" ;
-    s223:cnx bldg:nrel00000430,
-        bldg:nrel00000715,
-        bldg:nrel00000903,
-        bldg:nrel00001256 ;
-    s223:connected bldg:nrel00000053,
-        bldg:nrel00000061 ;
-    s223:connectedFrom bldg:nrel00000053 ;
-    s223:connectedThrough bldg:nrel00000589,
-        bldg:nrel00000678 ;
-    s223:connectedTo bldg:nrel00000061 ;
-    s223:contains bldg:nrel00000383,
-        bldg:nrel00000749,
-        bldg:nrel00001042 ;
-    s223:hasConnectionPoint bldg:nrel00000430,
-        bldg:nrel00000715,
-        bldg:nrel00000903,
-        bldg:nrel00001256 ;
-    s223:hasProperty bldg:nrel00000795,
-        bldg:nrel00000946 ;
-    s223:hasRole s223:Role-Heating .
-
-bldg:nrel00000058 a s223:Junction ;
-    rdfs:label "nrel00000058" ;
-    s223:cnx bldg:nrel00000760,
-        bldg:nrel00000984,
-        bldg:nrel00001260 ;
-    s223:connected bldg:nrel00000235,
-        bldg:nrel00000746,
-        bldg:nrel00001308 ;
-    s223:connectedFrom bldg:nrel00000235,
-        bldg:nrel00001308 ;
-    s223:connectedThrough bldg:nrel00000549,
-        bldg:nrel00000783,
-        bldg:nrel00001278 ;
-    s223:connectedTo bldg:nrel00000746 ;
-    s223:hasConnectionPoint bldg:nrel00000760,
-        bldg:nrel00000984,
-        bldg:nrel00001260 ;
-    s223:hasMedium s223:Medium-Air .
-
-bldg:nrel00000061 a s223:CoolingCoil ;
-    rdfs:label "nrel00000061" ;
-    s223:cnx bldg:nrel00000240,
-        bldg:nrel00000586,
-        bldg:nrel00000964,
-        bldg:nrel00001268 ;
-    s223:connected bldg:nrel00000007,
-        bldg:nrel00000683 ;
-    s223:connectedFrom bldg:nrel00000007 ;
-    s223:connectedThrough bldg:nrel00000589,
-        bldg:nrel00000642 ;
-    s223:connectedTo bldg:nrel00000683 ;
-    s223:contains bldg:nrel00000062,
-        bldg:nrel00001199 ;
-    s223:hasConnectionPoint bldg:nrel00000240,
-        bldg:nrel00000586,
-        bldg:nrel00000964,
-        bldg:nrel00001268 ;
-    s223:hasProperty bldg:nrel00000498,
-        bldg:nrel00000529,
-        bldg:nrel00000718,
-        bldg:nrel00001158,
-        bldg:nrel00001261 ;
-    s223:hasRole s223:Role-Cooling .
-
-bldg:nrel00000447 a s223:HeatRecoveryCoil ;
-    rdfs:label "nrel00000447" ;
-    s223:cnx bldg:nrel00000660,
-        bldg:nrel00000899,
-        bldg:nrel00001166,
-        bldg:nrel00001240 ;
-    s223:connected bldg:nrel00000053,
-        bldg:nrel00001087 ;
-    s223:connectedFrom bldg:nrel00001087 ;
-    s223:connectedThrough bldg:nrel00000875,
-        bldg:nrel00001198 ;
-    s223:connectedTo bldg:nrel00000053 ;
-    s223:hasConnectionPoint bldg:nrel00000660,
-        bldg:nrel00000899,
-        bldg:nrel00001166,
-        bldg:nrel00001240 ;
-    s223:hasProperty bldg:nrel00000199,
-        bldg:nrel00000542,
-        bldg:nrel00000585,
-        bldg:nrel00001061 .
-
-bldg:nrel00001089 a s223:HeatRecoveryCoil ;
-    rdfs:label "nrel00001089" ;
-    s223:cnx bldg:nrel00000351,
-        bldg:nrel00000618,
-        bldg:nrel00000821,
-        bldg:nrel00001304 ;
-    s223:connected bldg:nrel00000771,
-        bldg:nrel00001100 ;
-    s223:connectedFrom bldg:nrel00001100 ;
-    s223:connectedThrough bldg:nrel00000172,
-        bldg:nrel00000517 ;
-    s223:connectedTo bldg:nrel00000771 ;
-    s223:hasConnectionPoint bldg:nrel00000351,
-        bldg:nrel00000618,
-        bldg:nrel00000821,
-        bldg:nrel00001304 ;
-    s223:hasProperty bldg:nrel00000315,
-        bldg:nrel00000368,
-        bldg:nrel00000431,
-        bldg:nrel00000488 .
-
-bldg:nrel00001100 a s223:HeatExchanger ;
-    rdfs:label "nrel00001100" ;
-    s223:cnx bldg:nrel00000261,
-        bldg:nrel00000554,
-        bldg:nrel00000577,
-        bldg:nrel00001180 ;
-    s223:connected bldg:nrel00000429,
-        bldg:nrel00001089 ;
-    s223:connectedFrom bldg:nrel00000429 ;
-    s223:connectedThrough bldg:nrel00000172,
-        bldg:nrel00000891 ;
-    s223:connectedTo bldg:nrel00001089 ;
-    s223:contains bldg:nrel00000449,
-        bldg:nrel00001258,
-        bldg:nrel00001263 ;
-    s223:hasConnectionPoint bldg:nrel00000261,
-        bldg:nrel00000554,
-        bldg:nrel00000577,
-        bldg:nrel00001180 ;
-    s223:hasProperty bldg:nrel00000687,
-        bldg:nrel00000885,
-        bldg:nrel00001179 ;
-    s223:hasRole s223:Role-Evaporator .
-
 s223:cnx a s223:SymmetricProperty ;
     rdfs:label "cnx" ;
     rdfs:comment "The cnx relation is a symmetric property used to associate adjacent entities in a connection path (comprised of Equipment-ConnectionPoint-Connection-ConnectionPoint-Equipment sequences)." .
@@ -14857,24 +14598,6 @@ s223:cnx a s223:SymmetricProperty ;
 s223:hasRole a rdf:Property ;
     rdfs:label "hasRole" ;
     rdfs:comment "The relation hasRole is used to indicate the role of an Equipment, Connection, ConnectionPoint, or System within a building (e.g., a heating coil will be associated with Role-Heating). Possible values are defined in EnumerationKind-Role (see `s223:EnumerationKind-Role`)." .
-
-bldg:nrel00000966 a s223:DomainSpace ;
-    rdfs:label "nrel00000966" ;
-    s223:cnx bldg:nrel00000059,
-        bldg:nrel00000098,
-        bldg:nrel00000658 ;
-    s223:connected bldg:nrel00000235,
-        bldg:nrel00001308 ;
-    s223:connectedThrough bldg:nrel00000171,
-        bldg:nrel00000285 ;
-    s223:connectedTo bldg:nrel00000235,
-        bldg:nrel00001308 ;
-    s223:hasConnectionPoint bldg:nrel00000059,
-        bldg:nrel00000098,
-        bldg:nrel00000658 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000109,
-        bldg:nrel00000845 .
 
 s223:DomainSpace a s223:Class,
         sh:NodeShape ;
@@ -14922,6 +14645,24 @@ s223:PhysicalSpace a s223:Class,
         [ rdfs:comment "If the relation encloses is present it must associate the PhysicalSpace with a DomainSpace." ;
             sh:class s223:DomainSpace ;
             sh:path s223:encloses ] .
+
+bldg:nrel00001267 a s223:DomainSpace ;
+    rdfs:label "nrel00001267" ;
+    s223:cnx bldg:nrel00000186,
+        bldg:nrel00000236,
+        bldg:nrel00000245,
+        bldg:nrel00000339,
+        bldg:nrel00000444,
+        bldg:nrel00000627 ;
+    s223:hasConnectionPoint bldg:nrel00000186,
+        bldg:nrel00000236,
+        bldg:nrel00000245,
+        bldg:nrel00000339,
+        bldg:nrel00000444,
+        bldg:nrel00000627 ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:nrel00000184,
+        bldg:nrel00000743 .
 
 s223:Domain-HVAC a s223:Class,
         s223:Domain-HVAC,
@@ -14977,30 +14718,6 @@ Two values are deemed compatible if they are the same or if one is a direct ance
             sh:message "An EnumerationKind must not use the generalized hasProperty relation. EnumerationKind is a controlled vocabulary which must not be modified within a model." ;
             sh:path s223:hasProperty ] .
 
-bldg:nrel00001267 a s223:DomainSpace ;
-    rdfs:label "nrel00001267" ;
-    s223:cnx bldg:nrel00000186,
-        bldg:nrel00000236,
-        bldg:nrel00000245,
-        bldg:nrel00000339,
-        bldg:nrel00000444,
-        bldg:nrel00000627 ;
-    s223:connected bldg:nrel00000262,
-        bldg:nrel00000789 ;
-    s223:connectedFrom bldg:nrel00000262,
-        bldg:nrel00000789 ;
-    s223:connectedThrough bldg:nrel00000905,
-        bldg:nrel00001021 ;
-    s223:hasConnectionPoint bldg:nrel00000186,
-        bldg:nrel00000236,
-        bldg:nrel00000245,
-        bldg:nrel00000339,
-        bldg:nrel00000444,
-        bldg:nrel00000627 ;
-    s223:hasDomain s223:Domain-HVAC ;
-    s223:hasProperty bldg:nrel00000184,
-        bldg:nrel00000743 .
-
 s223:EnumerationKind-Role a s223:Class,
         s223:EnumerationKind-Role,
         sh:NodeShape ;
@@ -15022,32 +14739,34 @@ s223:Medium-Electricity a s223:Class,
     rdfs:comment "This class has enumerated instances of all forms of electricity, including AC and DC." ;
     rdfs:subClassOf s223:Substance-Medium .
 
-bldg:nrel00001113 a s223:Junction ;
-    rdfs:label "nrel00001113" ;
-    s223:cnx bldg:nrel00000043,
-        bldg:nrel00000790,
-        bldg:nrel00000802,
-        bldg:nrel00000841,
-        bldg:nrel00001182,
-        bldg:nrel00001203,
-        bldg:nrel00001242 ;
-    s223:connected bldg:nrel00000262,
-        bldg:nrel00000789,
-        bldg:nrel00001113 ;
-    s223:connectedFrom bldg:nrel00001113 ;
-    s223:connectedThrough bldg:nrel00000701,
-        bldg:nrel00000907,
-        bldg:nrel00001325 ;
-    s223:connectedTo bldg:nrel00000262,
-        bldg:nrel00000789,
-        bldg:nrel00001113 ;
-    s223:hasConnectionPoint bldg:nrel00000043,
-        bldg:nrel00000790,
-        bldg:nrel00000802,
-        bldg:nrel00000841,
-        bldg:nrel00001182,
-        bldg:nrel00001203,
-        bldg:nrel00001242 ;
+bldg:nrel00001305 a s223:Junction ;
+    rdfs:label "nrel00001305" ;
+    s223:cnx bldg:nrel00000399,
+        bldg:nrel00000438,
+        bldg:nrel00000603,
+        bldg:nrel00000640,
+        bldg:nrel00000775,
+        bldg:nrel00000806,
+        bldg:nrel00000924,
+        bldg:nrel00000942,
+        bldg:nrel00000947,
+        bldg:nrel00001007,
+        bldg:nrel00001068,
+        bldg:nrel00001080,
+        bldg:nrel00001193 ;
+    s223:hasConnectionPoint bldg:nrel00000399,
+        bldg:nrel00000438,
+        bldg:nrel00000603,
+        bldg:nrel00000640,
+        bldg:nrel00000775,
+        bldg:nrel00000806,
+        bldg:nrel00000924,
+        bldg:nrel00000942,
+        bldg:nrel00000947,
+        bldg:nrel00001007,
+        bldg:nrel00001068,
+        bldg:nrel00001080,
+        bldg:nrel00001193 ;
     s223:hasMedium s223:Medium-Air .
 
 s223:Frequency-50Hz a s223:Class,
@@ -15274,24 +14993,7 @@ s223:Equipment a s223:Class,
   The graphical depiction of Equipment used in this standard is a rounded cornered rectangle as show in Figure 5-1.
   ![Graphical Depiction of Equipment.](figures/Figure_5-1Graphical_Depiciton_of_Equipment.svg)""" ;
     rdfs:subClassOf s223:Connectable ;
-    sh:property [ a sh:PropertyShape ;
-            rdfs:comment "If the relation contains is present it must associate the Equipment with either Equipment or Junction." ;
-            sh:name "device contains shape" ;
-            sh:or ( [ sh:class s223:Equipment ] [ sh:class s223:Junction ] ) ;
-            sh:path s223:contains ],
-        [ rdfs:comment "If the relation commandedByProperty is present it must associate the Equipment with a ActuatableProperty." ;
-            sh:class s223:ActuatableProperty ;
-            sh:path s223:commandedByProperty ],
-        [ rdfs:comment "If the relation executes is present it must associate the Equipment with a FunctionBlock." ;
-            sh:class s223:FunctionBlock ;
-            sh:path s223:executes ],
-        [ rdfs:comment "If the relation hasPhysicalLocation is present it must associate the Equipment with a PhysicalSpace." ;
-            sh:class s223:PhysicalSpace ;
-            sh:path s223:hasPhysicalLocation ],
-        [ rdfs:comment "If the relation hasRole is present it must associate the Equipment with a EnumerationKind-Role." ;
-            sh:class s223:EnumerationKind-Role ;
-            sh:path s223:hasRole ],
-        [ rdfs:comment "Disallow contained equipment from having external incoming connections." ;
+    sh:property [ rdfs:comment "Disallow contained equipment from having external incoming connections." ;
             sh:path s223:connectedFrom ;
             sh:sparql [ a sh:SPARQLConstraint ;
                     rdfs:comment "Disallow contained equipment from having external incoming connections." ;
@@ -15344,7 +15046,24 @@ UNION
 ?type1 rdfs:subClassOf* ?type2 .
 }
 }
-""" ] ] ;
+""" ] ],
+        [ a sh:PropertyShape ;
+            rdfs:comment "If the relation contains is present it must associate the Equipment with either Equipment or Junction." ;
+            sh:name "device contains shape" ;
+            sh:or ( [ sh:class s223:Equipment ] [ sh:class s223:Junction ] ) ;
+            sh:path s223:contains ],
+        [ rdfs:comment "If the relation commandedByProperty is present it must associate the Equipment with a ActuatableProperty." ;
+            sh:class s223:ActuatableProperty ;
+            sh:path s223:commandedByProperty ],
+        [ rdfs:comment "If the relation executes is present it must associate the Equipment with a FunctionBlock." ;
+            sh:class s223:FunctionBlock ;
+            sh:path s223:executes ],
+        [ rdfs:comment "If the relation hasPhysicalLocation is present it must associate the Equipment with a PhysicalSpace." ;
+            sh:class s223:PhysicalSpace ;
+            sh:path s223:hasPhysicalLocation ],
+        [ rdfs:comment "If the relation hasRole is present it must associate the Equipment with a EnumerationKind-Role." ;
+            sh:class s223:EnumerationKind-Role ;
+            sh:path s223:hasRole ] ;
     sh:rule [ a sh:SPARQLRule ;
             rdfs:comment "For equipment contained within another piece of equipment use the mapsTo relation to infer a Medium from the containing equipment." ;
             sh:construct """
@@ -15406,28 +15125,10 @@ FILTER (NOT EXISTS {$this rdfs:comment ?something}) .
 
 bldg:nrel00000011 a owl:Ontology ;
     rdfs:label "nrel00000011" ;
-    sh:declare [ sh:namespace "http://qudt.org/schema/qudt/"^^xsd:anyURI ;
-            sh:prefix "qudt" ],
-        [ sh:namespace "http://qudt.org/vocab/quantitykind/"^^xsd:anyURI ;
-            sh:prefix "quantitykind" ],
-        [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
-            sh:prefix "s223" ],
-        [ sh:namespace "http://data.ashrae.org/standard223/1.0/vocab/role#"^^xsd:anyURI ;
-            sh:prefix "role" ],
-        [ sh:namespace "http://qudt.org/vocab/quantitykind/"^^xsd:anyURI ;
-            sh:prefix "qudtqk" ],
-        [ sh:namespace "http://qudt.org/vocab/unit/"^^xsd:anyURI ;
-            sh:prefix "unit" ],
-        [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
-            sh:prefix "rdfs" ],
-        [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    sh:declare [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
             sh:prefix "rdfs" ],
         [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
             sh:prefix "s223" ],
-        [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
-            sh:prefix "s223" ],
-        [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
-            sh:prefix "rdfs" ],
         [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
             sh:prefix "s223" ],
         [ sh:namespace "http://qudt.org/schema/qudt/"^^xsd:anyURI ;
@@ -15441,7 +15142,25 @@ bldg:nrel00000011 a owl:Ontology ;
         [ sh:namespace "http://www.w3.org/ns/shacl#"^^xsd:anyURI ;
             sh:prefix "sh" ],
         [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
-            sh:prefix "s223" ] .
+            sh:prefix "s223" ],
+        [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
+            sh:prefix "s223" ],
+        [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace "http://qudt.org/schema/qudt/"^^xsd:anyURI ;
+            sh:prefix "qudt" ],
+        [ sh:namespace "http://qudt.org/vocab/quantitykind/"^^xsd:anyURI ;
+            sh:prefix "quantitykind" ],
+        [ sh:namespace "http://data.ashrae.org/standard223#"^^xsd:anyURI ;
+            sh:prefix "s223" ],
+        [ sh:namespace "http://data.ashrae.org/standard223/1.0/vocab/role#"^^xsd:anyURI ;
+            sh:prefix "role" ],
+        [ sh:namespace "http://qudt.org/vocab/quantitykind/"^^xsd:anyURI ;
+            sh:prefix "qudtqk" ],
+        [ sh:namespace "http://qudt.org/vocab/unit/"^^xsd:anyURI ;
+            sh:prefix "unit" ],
+        [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+            sh:prefix "rdfs" ] .
 
 s223:Duct a s223:Class,
         sh:NodeShape ;
@@ -15458,75 +15177,6 @@ s223:Frequency-60Hz a s223:Class,
     qudt:hasUnit unit:HZ ;
     rdfs:comment "60 Hertz" ;
     rdfs:subClassOf s223:Numerical-Frequency .
-
-bldg:nrel00001305 a s223:Junction ;
-    rdfs:label "nrel00001305" ;
-    s223:cnx bldg:nrel00000399,
-        bldg:nrel00000438,
-        bldg:nrel00000603,
-        bldg:nrel00000640,
-        bldg:nrel00000775,
-        bldg:nrel00000806,
-        bldg:nrel00000924,
-        bldg:nrel00000942,
-        bldg:nrel00000947,
-        bldg:nrel00001007,
-        bldg:nrel00001068,
-        bldg:nrel00001080,
-        bldg:nrel00001193 ;
-    s223:connected bldg:nrel00000038,
-        bldg:nrel00000187,
-        bldg:nrel00000209,
-        bldg:nrel00000233,
-        bldg:nrel00000280,
-        bldg:nrel00000362,
-        bldg:nrel00000365,
-        bldg:nrel00000435,
-        bldg:nrel00000958,
-        bldg:nrel00000982,
-        bldg:nrel00001185,
-        bldg:nrel00001276,
-        bldg:nrel00001297 ;
-    s223:connectedFrom bldg:nrel00000982 ;
-    s223:connectedThrough bldg:nrel00000149,
-        bldg:nrel00000258,
-        bldg:nrel00000396,
-        bldg:nrel00000731,
-        bldg:nrel00000768,
-        bldg:nrel00000822,
-        bldg:nrel00000838,
-        bldg:nrel00000902,
-        bldg:nrel00001024,
-        bldg:nrel00001101,
-        bldg:nrel00001143,
-        bldg:nrel00001219,
-        bldg:nrel00001277 ;
-    s223:connectedTo bldg:nrel00000038,
-        bldg:nrel00000187,
-        bldg:nrel00000209,
-        bldg:nrel00000233,
-        bldg:nrel00000280,
-        bldg:nrel00000362,
-        bldg:nrel00000365,
-        bldg:nrel00000435,
-        bldg:nrel00000958,
-        bldg:nrel00001185,
-        bldg:nrel00001276,
-        bldg:nrel00001297 ;
-    s223:hasConnectionPoint bldg:nrel00000399,
-        bldg:nrel00000438,
-        bldg:nrel00000603,
-        bldg:nrel00000640,
-        bldg:nrel00000775,
-        bldg:nrel00000806,
-        bldg:nrel00000924,
-        bldg:nrel00000942,
-        bldg:nrel00000947,
-        bldg:nrel00001007,
-        bldg:nrel00001068,
-        bldg:nrel00001080,
-        bldg:nrel00001193 ;
-    s223:hasMedium s223:Medium-Air .
 
 s223:EnumeratedActuatableProperty a s223:Class,
         sh:NodeShape ;

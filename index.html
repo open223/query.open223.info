@@ -30,15 +30,34 @@
         <!-- TODO: autogenerate this -->
             <h4>223P Building Model Examples</h4>
             <div id="model-examples">
-                <ul class="example-models">
-                
-                    <li><a href="javascript: void(0);" @click="handleURL('compiled-models/doe-medium-office-ahu-vav.ttl', true)">doe medium office ahu vav</a></li>
-                
-                    <li><a href="javascript: void(0);" @click="handleURL('compiled-models/pritoni-latest.ttl', true)">pritoni latest</a></li>
-                
-                    <li><a href="javascript: void(0);" @click="handleURL('compiled-models/lbnl-example.ttl', true)">lbnl example</a></li>
-                
-                </ul>
+                <select class="example-models" @change="handleURL($event.target.value, true)">
+                    <option value=''><a href="javascript: void(0);">Select a model</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-parallel-fpu-variable-volume-fan.ttl'><a href="javascript: void(0);">g36 extensions parallel fpu variable volume fan</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-vav-cooling-only.ttl'><a href="javascript: void(0);">g36 extensions vav cooling only</a></option>
+                    
+                        <option value='compiled-models/doe-medium-office-ahu-vav.ttl'><a href="javascript: void(0);">doe medium office ahu vav</a></option>
+                    
+                        <option value='compiled-models/nrel-example.ttl'><a href="javascript: void(0);">nrel example</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-parallel-fpu-constant-volume-fan.ttl'><a href="javascript: void(0);">g36 extensions parallel fpu constant volume fan</a></option>
+                    
+                        <option value='compiled-models/pritoni-latest.ttl'><a href="javascript: void(0);">pritoni latest</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-dual-duct-terminal-unit-with-inlet-sensors.ttl'><a href="javascript: void(0);">g36 extensions dual duct terminal unit with inlet sensors</a></option>
+                    
+                        <option value='compiled-models/lbnl-example.ttl'><a href="javascript: void(0);">lbnl example</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-dual-duct-terminal-unit-with-discharge-sensor.ttl'><a href="javascript: void(0);">g36 extensions dual duct terminal unit with discharge sensor</a></option>
+                    
+                        <option value='compiled-models/IBAL.ttl'><a href="javascript: void(0);">IBAL</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-vav-reheat.ttl'><a href="javascript: void(0);">g36 extensions vav reheat</a></option>
+                    
+                        <option value='compiled-models/g36-extensions-multiple-zone-ahu.ttl'><a href="javascript: void(0);">g36 extensions multiple zone ahu</a></option>
+                    
+                </select>
             </div>
 
             <h4>223P Queries</h4>
@@ -48,11 +67,11 @@
                 
                     <option value='U0VMRUNUID9lbnQgP3R5cGUgV0hFUkUgewogICAgP2VudCByZGY6dHlwZSA/dHlwZSAuCiAgICA/dHlwZSByZGZzOnN1YkNsYXNzT2YqIHMyMjM6Q29uY2VwdAp9'><a href="javascript: void(0);">All entities and their types</a></option>
                 
-                    <option value='U0VMRUNUID9zeXMgV0hFUkUgewogICAgP3N5cyByZGY6dHlwZS9yZGZzOnN1YkNsYXNzT2YqIHMyMjM6U3lzdGVtIC4KfQ=='><a href="javascript: void(0);">All Systems</a></option>
+                    <option value='U0VMRUNUID9zeXMgV0hFUkUgewogICAgP3N5cyByZGY6dHlwZS9yZGZzOnN1YkNsYXNzT2YqIHMyMjM6RXF1aXBtZW50IC4KfQ=='><a href="javascript: void(0);">All Equipment</a></option>
                 
-                    <option value='U0VMRUNUID9zZW5zb3IgP2xvY2F0aW9uIFdIRVJFIHsKICAgID9zZW5zb3IgcmRmOnR5cGUvcmRmczpzdWJDbGFzc09mKiBzMjIzOlNlbnNvciAuCiAgICA/c2Vuc29yIHMyMjM6b2JzZXJ2ZXNQcm9wZXJ0eSA/cHJvcGVydHkgLgogICAgP3Byb3BlcnR5IHF1ZHQ6aGFzUXVhbnRpdHlLaW5kIHF1YW50aXR5a2luZDpUZW1wZXJhdHVyZSAuCiAgICA/c2Vuc29yIHMyMjM6aGFzTWVhc3VyZW1lbnRMb2NhdGlvbiA/bG9jYXRpb24KfQ=='><a href="javascript: void(0);">Temperature Sensors</a></option>
+                    <option value='U0VMRUNUID9zZW5zb3IgP2xvY2F0aW9uIFdIRVJFIHsKICAgID9zZW5zb3IgcmRmOnR5cGUvcmRmczpzdWJDbGFzc09mKiBzMjIzOlNlbnNvciAuCiAgICA/c2Vuc29yIHMyMjM6b2JzZXJ2ZXMgP3Byb3BlcnR5IC4KICAgID9wcm9wZXJ0eSBxdWR0Omhhc1F1YW50aXR5S2luZCBxdWFudGl0eWtpbmQ6VGVtcGVyYXR1cmUgLgogICAgP3NlbnNvciBzMjIzOmhhc09ic2VydmF0aW9uTG9jYXRpb24gP2xvY2F0aW9uCn0='><a href="javascript: void(0);">Temperature Sensors</a></option>
                 
-                    <option value='U0VMRUNUID9zZW5zb3IKV0hFUkUgewo/c2Vuc29yIGEgczIyMzpUZW1wZXJhdHVyZVNlbnNvciAuCj9zZW5zb3IgczIyMzpoYXNNZWFzdXJlbWVudExvY2F0aW9uID9sb2NhdGlvbiAuCj9kZXZpY2UgczIyMzpjb250YWlucyA/c2Vuc29yIC4KfQ=='><a href="javascript: void(0);">What are all the temperature sensors?</a></option>
+                    <option value='U0VMRUNUID9zZW5zb3IgP3BoeXNpY2FsX2xvY2F0aW9uCldIRVJFIHsKP3NlbnNvciByZGY6dHlwZS9yZGZzOnN1YkNsYXNzT2YqIHMyMjM6U2Vuc29yIC4KP3NlbnNvciBzMjIzOm9ic2VydmVzID9wcm9wZXJ0eSAuCj9wcm9wZXJ0eSBxdWR0Omhhc1F1YW50aXR5S2luZCBxdWFudGl0eWtpbmQ6VGVtcGVyYXR1cmUgLgo/c2Vuc29yIHMyMjM6aGFzUGh5c2ljYWxMb2NhdGlvbiA/cGh5c2ljYWxfbG9jYXRpb24gLgp9'><a href="javascript: void(0);">What are all the temperature sensors?</a></option>
                 
                     <option value='U0VMRUNUICogV0hFUkUgewo/c3RhcnQgYS9yZGZzOnN1YkNsYXNzT2YqIHMyMjM6RGV2aWNlIC4KP3N0YXJ0IHMyMjM6Y29ubmVjdGVkVG8gP2RzIC4KP2RzIGEgczIyMzpEb21haW5TcGFjZSAuCj9kcyBzMjIzOmhhc0RvbWFpbiBzMjIzOkRvbWFpbi1IVkFDIC4KP3N0YXJ0IHMyMjM6Y29ubmVjdGVkVG8rID90aGluZyAuCkZJTFRFUiAoP3N0YXJ0ID0gP3RoaW5nKSAuCn0='><a href="javascript: void(0);">Does the supply air contain recirculated air?</a></option>
                 
