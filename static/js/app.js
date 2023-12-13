@@ -69,7 +69,6 @@ const app = Vue.createApp({
                     console.log("adding uri: " + url);
                     self.$root.handleURL(url, false);
                 }
-                self.$root.handleURL("ontologies/223p.ttl", true);
                 console.log(self.store);
             });
     },
