@@ -29,18 +29,6 @@
 		<p>
         Use the dropdown to select a query, or write your own in the box below.
         We recommend navigating to <a href="https://models.open223.info">models.open223.info</a> to find a model to query.
-        <!-- 
-            <h4>223P Building Model Examples</h4>
-            <div id="model-examples">
-                <select class="example-models" @change="handleURL($event.target.value, true)">
-                    <option value=''><a href="javascript: void(0);">Select a model</a></option>
-                    {% for model_name, model_file in models.items() %}
-                        <option value='{{ model_file }}'><a href="javascript: void(0);">{{ model_name }}</a></option>
-                    {% endfor %}
-                </select>
-            </div>
-        -->
-
             <h4>223P Queries</h4>
             <div id="query-examples">
                 <select class="example-models" @change="handleQuery($event)">

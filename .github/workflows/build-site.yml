@@ -33,12 +33,6 @@ jobs:
       - name: install deps
         run: poetry install
 
-      - name: handle ontology imports
-        run: poetry run ontoenv init
-
-      - name: compile models
-        run: make compile-models
-
       - name: make index.html
         run: make index.html
 

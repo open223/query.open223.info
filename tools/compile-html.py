@@ -13,8 +13,7 @@ for query in queries:
     queries_for_templates[query["name"]] = base64.b64encode(query["query"].encode('ascii')).decode('ascii')
 
 
-models = {}
-
+#models = {}
 # these lines used to load the "pre-compiled" models w/o SHACL reasoning
 # # find models in 223p repo
 # for model_file in glob.glob("223standard/data/*.ttl"):

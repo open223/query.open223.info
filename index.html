@@ -27,39 +27,8 @@
                     </p>
                 </details>
 		<p>
-        <!-- TODO: autogenerate this -->
-            <h4>223P Building Model Examples</h4>
-            <div id="model-examples">
-                <select class="example-models" @change="handleURL($event.target.value, true)">
-                    <option value=''><a href="javascript: void(0);">Select a model</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-parallel-fpu-variable-volume-fan.ttl'><a href="javascript: void(0);">g36 extensions parallel fpu variable volume fan</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-vav-cooling-only.ttl'><a href="javascript: void(0);">g36 extensions vav cooling only</a></option>
-                    
-                        <option value='compiled-models/doe-medium-office-ahu-vav.ttl'><a href="javascript: void(0);">doe medium office ahu vav</a></option>
-                    
-                        <option value='compiled-models/nrel-example.ttl'><a href="javascript: void(0);">nrel example</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-parallel-fpu-constant-volume-fan.ttl'><a href="javascript: void(0);">g36 extensions parallel fpu constant volume fan</a></option>
-                    
-                        <option value='compiled-models/pritoni-latest.ttl'><a href="javascript: void(0);">pritoni latest</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-dual-duct-terminal-unit-with-inlet-sensors.ttl'><a href="javascript: void(0);">g36 extensions dual duct terminal unit with inlet sensors</a></option>
-                    
-                        <option value='compiled-models/lbnl-example.ttl'><a href="javascript: void(0);">lbnl example</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-dual-duct-terminal-unit-with-discharge-sensor.ttl'><a href="javascript: void(0);">g36 extensions dual duct terminal unit with discharge sensor</a></option>
-                    
-                        <option value='compiled-models/IBAL.ttl'><a href="javascript: void(0);">IBAL</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-vav-reheat.ttl'><a href="javascript: void(0);">g36 extensions vav reheat</a></option>
-                    
-                        <option value='compiled-models/g36-extensions-multiple-zone-ahu.ttl'><a href="javascript: void(0);">g36 extensions multiple zone ahu</a></option>
-                    
-                </select>
-            </div>
-
+        Use the dropdown to select a query, or write your own in the box below.
+        We recommend navigating to <a href="https://models.open223.info">models.open223.info</a> to find a model to query.
             <h4>223P Queries</h4>
             <div id="query-examples">
                 <select class="example-models" @change="handleQuery($event)">
