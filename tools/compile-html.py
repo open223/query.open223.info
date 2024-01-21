@@ -26,10 +26,10 @@ models = {}
 #     model_name = model_file.split("/")[-1].split(".")[0].replace("-", " ")
 #     models[model_name] = model_file
 
-for model_file in glob.glob("compiled-models/*.ttl"):
-    model_name = model_file.split("/")[-1].split(".")[0].replace("-", " ")
-    models[model_name] = model_file
+#for model_file in glob.glob("compiled-models/*.ttl"):
+#    model_name = model_file.split("/")[-1].split(".")[0].replace("-", " ")
+#    models[model_name] = model_file
 
 
 with open("index.html", "w") as f:
-    f.write(template.render(models=models, queries=queries_for_templates))
+    f.write(template.render(queries=queries_for_templates))

@@ -7,12 +7,12 @@ license = "bsd-3-clause"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-ontoenv = "^0.3.9a1"
+ontoenv = "^0.4.0a12"
 rdflib = "^7.0"
 Jinja2 = "^3.1.1"
 toml = "^0.10.2"
 numpy = ">=1.26.0"
-brickschema = "^0.7.3a10"
+brickschema = "^0.7.4a9"
 
 [tool.poetry.dev-dependencies]
 
