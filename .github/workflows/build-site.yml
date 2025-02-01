@@ -27,11 +27,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run image
-        uses: abatilo/actions-poetry@v2
-
-      - name: install deps
-        run: poetry install
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
       - name: make index.html
         run: make index.html

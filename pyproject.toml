@@ -1,21 +1,14 @@
-[tool.poetry]
-name = "223p-web-sparql"
+[project]
+name = "query-open223-info"
 version = "0.1.0"
-description = ""
-authors = ["Gabe Fierro <gtfierro@mines.edu>"]
-license = "bsd-3-clause"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-ontoenv = "^0.4.0a12"
-rdflib = "^7.0"
-Jinja2 = "^3.1.1"
-toml = "^0.10.2"
-numpy = ">=1.26.0"
-brickschema = "^0.7.4a9"
-
-[tool.poetry.dev-dependencies]
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "brickschema>=0.7.6a3",
+    "jinja2>=3.1.4",
+    "numpy>=2.2.2",
+    "pyontoenv>=0.1.10a8",
+    "rdflib>=7.0.0",
+    "toml>=0.10.2",
+]

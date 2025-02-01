@@ -3,13 +3,13 @@
 all: index.html
 
 environment:
-	poetry run ontoenv init
+	uv run ontoenv init
 
 gather-files:
-	./tools/gather-files.sh
+	cp 223standard/data/*.ttl instance-models/
 
 index.html: templates/index.html queries.toml
-	poetry run python tools/compile-html.py
+	uv run python tools/compile-html.py
 
 clean:
 	rm -f index.html
